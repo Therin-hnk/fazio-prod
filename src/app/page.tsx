@@ -7,6 +7,7 @@ import CarouselSlide from './components/CarouselSlide';
 import MenuBare from './components/menu';
 import EventsSection from './components/EventsSection';
 import SponsorsPartnersSection from './components/SponsorsPartnersSection';
+import WebsiteStatsSection from './components/WebsiteStatsSection';
 
 interface Slide {
   id: number;
@@ -50,6 +51,8 @@ const HomePage: React.FC = () => (
     <EventsSection />
 
     <SponsorsPartnersSection/>
+
+    <WebsiteStatsSection/>
   </div>
 );
 

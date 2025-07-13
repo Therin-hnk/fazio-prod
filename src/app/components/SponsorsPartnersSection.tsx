@@ -161,8 +161,8 @@ const SponsorsPartnersSection: React.FC = () => {
           {/* Scrolling Container */}
           <div 
             className="relative overflow-hidden rounded-2xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 py-8"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
+            // onMouseEnter={() => setIsPaused(true)}
+            // onMouseLeave={() => setIsPaused(false)}
           >
             {/* Gradient overlays for smooth edges */}
             <div className="absolute left-0 top-0 w-20 h-full bg-gradient-to-r from-white/50 to-transparent dark:from-gray-800/50 z-10" />
@@ -195,7 +195,7 @@ const SponsorsPartnersSection: React.FC = () => {
 
             {/* Play/Pause indicator */}
             <div className="absolute top-4 right-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full p-3 z-20">
-              {isPaused ? (
+              {/* {isPaused ? (
                 <div className="w-3 h-3 bg-gray-400 rounded-full" />
               ) : (
                 <div className="flex space-x-1">
@@ -203,7 +203,12 @@ const SponsorsPartnersSection: React.FC = () => {
                   <div className="w-1 h-4 bg-orange-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
                   <div className="w-1 h-4 bg-orange-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
                 </div>
-              )}
+              )} */}
+              <div className="flex space-x-1">
+                  <div className="w-1 h-4 bg-orange-500 rounded-full animate-pulse" />
+                  <div className="w-1 h-4 bg-orange-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+                  <div className="w-1 h-4 bg-orange-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
+                </div>
             </div>
           </div>
         </motion.div>
