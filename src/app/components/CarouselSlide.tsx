@@ -41,7 +41,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
     }, autoPlayDelay);
 
     return () => clearInterval(interval);
-  }, [autoPlayDelay, isPaused, isTransitioning]);
+  }, [autoPlayDelay, isPaused, isTransitioning, slides.length]);
 
   // Reset isTransitioning after animation duration
   useEffect(() => {
