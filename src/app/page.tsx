@@ -6,6 +6,7 @@ import SearchBar from './components/SearchBar';
 import CarouselSlide from './components/CarouselSlide';
 import MenuBare from './components/menu';
 import EventsSection from './components/EventsSection';
+import SponsorsPartnersSection from './components/SponsorsPartnersSection';
 
 interface Slide {
   id: number;
@@ -47,6 +48,8 @@ const HomePage: React.FC = () => (
       <CarouselSlide slides={slides} autoPlayDelay={10000} className="h-full" />
     </section>
     <EventsSection />
+
+    <SponsorsPartnersSection/>
   </div>
 );
 

@@ -111,7 +111,7 @@ const EventsSection: React.FC = () => {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Titre */}
         <motion.h2 
-          className="text-1xl sm:text-3xl md:text-3xl font-bold text-center mb-8 md:mb-9 text-[#F97316]"
+          className="text-1xl sm:text-3xl md:text-3xl font-bold text-center mb-8 md:mb-9 text-[#000000aa]"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -167,47 +167,95 @@ const EventsSection: React.FC = () => {
           )}
         </motion.div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <motion.div 
-            className="mt-12 md:mt-16 flex flex-wrap justify-center gap-2"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              disabled={currentPage === 1}
-              className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-              aria-label="Page précédente"
+        {/* Pagination moderne et attrayante */}
+{totalPages > 1 && (
+  <motion.div 
+    className="mt-12 md:mt-16 flex justify-center"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: 0.3 }}
+  >
+    <div className="flex items-center space-x-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+      {/* Bouton Précédent */}
+      <motion.button
+        onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+        disabled={currentPage === 1}
+        className="group relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium transition-all duration-300 hover:from-orange-600 hover:to-orange-700 hover:shadow-lg hover:shadow-orange-500/25 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-none"
+        whileHover={{ scale: currentPage === 1 ? 1 : 1.05 }}
+        whileTap={{ scale: currentPage === 1 ? 1 : 0.95 }}
+        aria-label="Page précédente"
+      >
+        <svg className="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </motion.button>
+
+      {/* Pages */}
+      <div className="flex items-center space-x-1 mx-2">
+        {Array.from({ length: totalPages }).map((_, index) => {
+          const pageNum = index + 1;
+          const isActive = currentPage === pageNum;
+          const isNearActive = Math.abs(currentPage - pageNum) <= 1;
+          const shouldShow = totalPages <= 7 || isNearActive || pageNum === 1 || pageNum === totalPages;
+
+          if (!shouldShow && pageNum !== 2 && pageNum !== totalPages - 1) {
+            return pageNum === 2 || pageNum === totalPages - 1 ? (
+              <span key={`dots-${pageNum}`} className="px-2 py-2 text-gray-400 dark:text-gray-500 font-medium">
+                ...
+              </span>
+            ) : null;
+          }
+
+          return (
+            <motion.button
+              key={pageNum}
+              onClick={() => setCurrentPage(pageNum)}
+              className={`relative w-12 h-12 rounded-xl font-semibold transition-all duration-300 ${
+                isActive
+                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/25'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-orange-600 dark:hover:text-orange-400'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label={`Aller à la page ${pageNum}`}
+              aria-current={isActive ? 'page' : undefined}
             >
-              Précédent
-            </button>
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentPage(index + 1)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  currentPage === index + 1
-                    ? 'bg-orange-500 text-white'
-                    : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-orange-100 dark:hover:bg-gray-600'
-                }`}
-                aria-label={`Aller à la page ${index + 1}`}
-                aria-current={currentPage === index + 1 ? 'page' : undefined}
-              >
-                {index + 1}
-              </button>
-            ))}
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-              aria-label="Page suivante"
-            >
-              Suivant
-            </button>
-          </motion.div>
-        )}
+              {isActive && (
+                <motion.div
+                  className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600"
+                  layoutId="activePageBg"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">{pageNum}</span>
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {/* Bouton Suivant */}
+      <motion.button
+        onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="group relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium transition-all duration-300 hover:from-orange-600 hover:to-orange-700 hover:shadow-lg hover:shadow-orange-500/25 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-none"
+        whileHover={{ scale: currentPage === totalPages ? 1 : 1.05 }}
+        whileTap={{ scale: currentPage === totalPages ? 1 : 0.95 }}
+        aria-label="Page suivante"
+      >
+        <svg className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </motion.button>
+    </div>
+
+    {/* Indicateur de page (optionnel) */}
+    <div className="absolute mt-20 flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+      <span>Page {currentPage} sur {totalPages}</span>
+      <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+      <span>{filteredEvents.length} événement{filteredEvents.length > 1 ? 's' : ''}</span>
+    </div>
+  </motion.div>
+)}
       </div>
     </section>
   );
