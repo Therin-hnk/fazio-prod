@@ -115,7 +115,7 @@ const ParticipantsSection: React.FC = () => {
       
       <div className="flex flex-wrap justify-center gap-6 mt-6">
         {currentParticipants.map((participant, index) => (
-          <div className='w-full max-w-[350px]'>
+          <div className='w-full max-w-[350px]' key={participant.id}>
             <ParticipantCard
               key={participant.id}
               id={participant.id}
