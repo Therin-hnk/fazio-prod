@@ -23,6 +23,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Montserrat', 'Roboto', 'sans-serif'],
+        jakarta: ['"plus-jakarta-sans"', 'sans-serif'],
+        poppins: ['"poppins"', 'sans-serif']
       },
     },
   },

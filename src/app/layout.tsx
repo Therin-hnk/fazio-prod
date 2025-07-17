@@ -133,7 +133,7 @@ export default function RootLayout({
         <a className="sr-only" href="https://www.youtube.com/@fazioprod">Fazio Prod sur YouTube</a>
 
         <MenuBare />
-        <main className="flex-grow" role="main">
+        <main className="flex-grow font-poppins" role="main">
           {children}
         </main>
         <footer className="bg-gray-800 text-gray-100 py-6 text-center">

@@ -61,10 +61,10 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         </p>
         
         {/* Bouton Voir Plus */}
-        <button className="text-orange-500 hover:text-orange-600 font-medium text-sm mb-4 transition-colors duration-300 flex items-center gap-1">
+        <a href={`/emissions/${event.title}`} className="text-orange-500 hover:text-orange-600 font-medium text-sm mb-4 transition-colors duration-300 flex items-center gap-1">
           <Eye className="w-4 h-4" />
           Voir Plus
-        </button>
+        </a>
         
         {/* Vidéo */}
         <VideoPlayer

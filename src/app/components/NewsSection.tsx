@@ -1,19 +1,6 @@
 import React from 'react';
-import Image from 'next/image';
+import NewsCard, { NewsItem } from './NewsCard';
 
-// Types pour les données
-interface NewsItem {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  category: string;
-  categoryColor: string;
-  image: string;
-  slug: string;
-}
-
-// Données exemple basées sur l'image
 const newsData: NewsItem[] = [
   {
     id: '1',
@@ -77,97 +64,33 @@ const newsData: NewsItem[] = [
   }
 ];
 
-// Composant pour une carte d'actualité
-const NewsCard: React.FC<{ item: NewsItem }> = ({ item }) => {
-  return (
-    <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden group">
-      {/* Image avec overlay au hover */}
-      <div className="relative h-48 overflow-hidden">
-        <Image
-          src={item.image}
-          alt={item.title}
-          fill
-          unoptimized
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-      </div>
-      
-      {/* Contenu */}
-      <div className="p-6">
-        {/* Catégorie et date */}
-        <div className="flex items-center justify-between mb-3">
-          <span className={`text-sm font-medium ${item.categoryColor}`}>
-            {item.category}
-          </span>
-          <span className="text-sm text-gray-500">
-            {item.date}
-          </span>
-        </div>
-        
-        {/* Titre */}
-        <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 leading-6">
-          {item.title}
-        </h3>
-        
-        {/* Description */}
-        <p className="text-gray-600 text-sm line-clamp-3 mb-4 leading-5">
-          {item.description}
+const NewsSection: React.FC = () => (
+  <section className="py-16 bg-gray-50 dark:bg-gray-900" role="region" aria-label="Actualités récentes">
+    <div className="container mx-auto px-4">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          Actualités Récentes
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          Restez informé des dernières nouvelles, résultats de tournois et actualités de la plateforme d’événements Fazio Prod.
         </p>
-        
-        {/* Lien "Lire la suite" */}
-        <div className="flex items-center text-blue-600 text-sm font-medium hover:text-blue-700 transition-colors duration-200">
-          <span>Lire la suite</span>
-          <svg 
-            className="w-4 h-4 ml-1 transition-transform duration-200 group-hover:translate-x-1" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M9 5l7 7-7 7" 
-            />
-          </svg>
-        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {newsData.map((item) => (
+          <NewsCard key={item.id} item={item} />
+        ))}
+      </div>
+      <div className="text-center mt-12">
+        <a
+          href="/actualites"
+          className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
+          aria-label="Voir toutes les actualités de Fazio Prod"
+        >
+          Voir toutes les actualités
+        </a>
       </div>
     </div>
-  );
-};
-
-// Composant principal de la section actualités
-const NewsSection: React.FC = () => {
-  return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
-        {/* En-tête de section */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Actualités Récentes
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            {"Restez informé des dernières nouvelles, résultats de tournois et actualités de la plateforme d'événements Fazio Prod."}
-          </p>
-        </div>
-        
-        {/* Grille des actualités */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {newsData.map((item) => (
-            <NewsCard key={item.id} item={item} />
-          ))}
-        </div>
-        
-        {/* Bouton "Voir toutes les actualités" */}
-        <div className="text-center mt-12">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
-            Voir toutes les actualités
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-};
+  </section>
+);
 
 export default NewsSection;
