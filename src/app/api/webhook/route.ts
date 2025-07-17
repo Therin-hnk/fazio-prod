@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 //   console.log(body);
 
   try {
-    
+    console.log(body);
     
 
     return Response.json({}, { status: 201 });

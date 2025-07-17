@@ -94,10 +94,13 @@ const ParticipantsSection: React.FC = () => {
     console.log('Vote pour participant:', id);
     console.log('Nombre de votes:', voteCount);
     console.log('Prix total:', price);
+    console.log(process.env.NEXT_PUBLIC_KKPAY_PUBLIC);
     openKkiapayWidget({
       amount: price, // en FCFA
-      api_key: process.env.PUBLIC_KKPAY_PUBLIC,
+      api_key: process.env.NEXT_PUBLIC_KKPAY_PUBLIC,
       sandbox: true,
+      email: "fazio-prod@gmail.com",
+      data: id,
     });
     // Logique de vote à implémenter
   };
