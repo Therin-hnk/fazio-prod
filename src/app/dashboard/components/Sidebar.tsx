@@ -60,7 +60,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   // Initialiser les éléments de navigation au montage
   useEffect(() => {
     initializeNavItems();
-  }, []);
+  });
 
   // Vérifier l'authentification
   useEffect(() => {

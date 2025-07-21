@@ -41,7 +41,7 @@ export default function EventsPage() {
       }
     };
     loadEvents();
-  }, []);
+  });
 
   const handleFilterChange = (organizerId: string | null, status: string | null, search: string) => {
     let filtered = events;

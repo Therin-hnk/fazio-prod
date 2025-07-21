@@ -246,7 +246,7 @@ export default function EventFilter({ onFilterChange }: EventFilterProps) {
                 {search && (
                   <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-red-100 to-red-200 text-red-800 text-sm font-medium rounded-full border border-red-300 shadow-sm">
                     <Search className="h-3 w-3" />
-                    "{search}"
+                    {search}
                     <button
                       onClick={clearSearch}
                       className="hover:text-red-900 transition-colors duration-200 ml-1 hover:bg-red-300 rounded-full p-0.5"
