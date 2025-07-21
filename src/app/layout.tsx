@@ -1,12 +1,21 @@
+"use client"
+
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import MenuBare from './components/menu';
 import './globals.css';
 
+import { ReactNode, useMemo } from "react"
+import { usePathname } from "next/navigation"
+
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
+const HIDDEN_LAYOUT_PATHS = [
+  '/dashboard',
+]
+
 // Métadonnées optimisées pour le SEO
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: 'Fazio Prod - Concours et Événements au Bénin',
   description:
     'Découvrez et participez aux concours artistiques et culturels au Bénin avec Fazio Prod. Votez pour vos talents préférés et vivez des événements uniques comme le Festival Voodoo et la Fête de la Gani.',
@@ -101,11 +110,13 @@ const schemaData = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname()
+  // Détermine dynamiquement si le layout doit être caché
+  const isHiddenLayout = useMemo(() => (
+    HIDDEN_LAYOUT_PATHS.some(path => pathname?.startsWith(path))
+  ), [pathname])
+
   return (
     <html className="bg-white dark:bg-gray-900" lang="fr">
       <head>
@@ -132,7 +143,7 @@ export default function RootLayout({
         <a className="sr-only" href="https://www.instagram.com/fazioprod">Fazio Prod sur Instagram</a>
         <a className="sr-only" href="https://www.youtube.com/@fazioprod">Fazio Prod sur YouTube</a>
 
-        <MenuBare />
+        {!isHiddenLayout && <MenuBare />}
         <main className="flex-grow font-poppins" role="main">
           {children}
         </main>

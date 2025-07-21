@@ -3,13 +3,6 @@ import { kkiapay } from "@kkiapay-org/nodejs-sdk";
 
 export const dynamic = 'force-dynamic';
 
-const kk = kkiapay({
-  privatekey: process.env.PRIVATE!,
-  publickey: process.env.PUBLIC!,
-  secretkey: process.env.SECRETE!,
-  sandbox: true, // false en prod
-});
-
 export async function POST(request: Request) {
   const body = await request.json();
 //   console.log(body);
