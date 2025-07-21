@@ -29,7 +29,7 @@ export default function EventsPage() {
         if (userId) {
           headers['x-user-id'] = userId;
         }
-        const res = await fetch('/api/events', { headers });
+        const res = await fetch('/api/admin/events', { headers });
         if (!res.ok) throw new Error('Erreur lors de la récupération des événements.');
         const data = await res.json();
         setEvents(data);
@@ -55,7 +55,8 @@ export default function EventsPage() {
       const lowerSearch = search.toLowerCase();
       filtered = filtered.filter((event) =>
         event.name.toLowerCase().includes(lowerSearch) ||
-        (event.description && event.description.toLowerCase().includes(lowerSearch))
+        (event.description && event.description.toLowerCase().includes(lowerSearch)) ||
+        (event.location && event.location.toLowerCase().includes(lowerSearch))
       );
     }
     setFilteredEvents(filtered);
@@ -64,7 +65,12 @@ export default function EventsPage() {
   const handleCreate = async (data: {
     name: string;
     description?: string;
+    videos?: string[];
     organizerId: string;
+    image?: string;
+    startDate?: string;
+    endDate?: string;
+    location?: string;
     status?: string;
   }) => {
     try {
@@ -74,12 +80,15 @@ export default function EventsPage() {
       if (userId) {
         headers['x-user-id'] = userId;
       }
-      const res = await fetch('/api/events', {
+      const res = await fetch(`/api/admin/events/create`, {
         method: 'POST',
         headers,
         body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error('Erreur lors de la création de l\'événement.');
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Erreur lors de la création de l\'événement.');
+      }
       const response = await res.json();
       setEvents([...events, response.event]);
       setFilteredEvents([...events, response.event]);
@@ -93,7 +102,12 @@ export default function EventsPage() {
   const handleUpdate = async (data: {
     name: string;
     description?: string;
+    videos?: string[];
     organizerId: string;
+    image?: string;
+    startDate?: string;
+    endDate?: string;
+    location?: string;
     status?: string;
   }) => {
     if (!editingEvent) return;

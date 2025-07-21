@@ -53,7 +53,7 @@ const Login = () => {
         });
         setErrorMessage(res.message || 'Erreur lors de la connexion');
       } else {
-        const { userId, token, roleName } = res;
+        const { userId, token } = res;
 
         // Stocker le token dans un cookie sécurisé
         Cookies.set('managerToken', token, { secure: true, sameSite: 'Strict' });

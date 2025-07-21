@@ -4,8 +4,6 @@ export async function POST(request: Request) {
 
   try {
     const payload = { email, password };
-    console.log(payload);
-    console.log(process.env.NEXT_PUBLIC_API_KEY);
     
     const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",

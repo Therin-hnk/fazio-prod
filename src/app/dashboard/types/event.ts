@@ -2,8 +2,13 @@ export interface Event {
   id: string;
   name: string;
   description?: string;
+  videos?: string[];
   organizerId: string;
-  status: 'active' | 'completed' | 'canceled';
+  image?: string;
+  startDate?: string;
+  endDate?: string;
+  location?: string;
+  status: 'coming' | 'ongoing' | 'finished' | 'cancelled';
   organizer?: Organizer;
 }
 

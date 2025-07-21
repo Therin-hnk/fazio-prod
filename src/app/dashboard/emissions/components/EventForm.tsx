@@ -2,14 +2,19 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Event, Organizer } from '../../types/event';
-import { Calendar, FileText, User, CheckCircle, AlertCircle, X, Save, Loader2 } from 'lucide-react';
+import { Calendar, FileText, User, CheckCircle, AlertCircle, X, Save, Loader2, Link, MapPin } from 'lucide-react';
 
 interface EventFormProps {
   event?: Event;
   onSubmit: (data: {
     name: string;
     description?: string;
+    videos?: string[];
     organizerId: string;
+    image?: string;
+    startDate?: string;
+    endDate?: string;
+    location?: string;
     status?: string;
   }) => Promise<void>;
   onCancel: () => void;
@@ -18,9 +23,13 @@ interface EventFormProps {
 export default function EventForm({ event, onSubmit, onCancel }: EventFormProps) {
   const [name, setName] = useState(event?.name || '');
   const [description, setDescription] = useState(event?.description || '');
+  const [videos, setVideos] = useState<string[]>(event?.videos || []);
   const [organizerId, setOrganizerId] = useState(event?.organizerId || '');
-  const [status, setStatus] = useState<string>(event?.status || 'active');
-  const [organizers, setOrganizers] = useState<Organizer[]>([]);
+  const [image, setImage] = useState(event?.image || '');
+  const [startDate, setStartDate] = useState(event?.startDate || '');
+  const [endDate, setEndDate] = useState(event?.endDate || '');
+  const [location, setLocation] = useState(event?.location || '');
+  const [status, setStatus] = useState<string>(event?.status || 'coming');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,49 +38,40 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
 
   const userId = typeof window !== 'undefined' ? localStorage.getItem('managerId') : null;
 
-  useEffect(() => {
-    const loadOrganizers = async () => {
-      setOrganizersLoading(true);
-      try {
-        const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
-        };
-        if (userId) {
-          headers['x-user-id'] = userId;
-        }
-        const res = await fetch('/api/manager/v1/users/get', { headers });
-        if (!res.ok) throw new Error(`Erreur ${res.status}: ${res.statusText}`);
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          setOrganizers(data);
-          if (!event && data.length > 0) {
-            setOrganizerId(data[0].id);
-          }
-        } else {
-          throw new Error('Format de données invalide');
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Impossible de charger les organisateurs');
-      } finally {
-        setOrganizersLoading(false);
-      }
-    };
-    loadOrganizers();
-  }, [event, userId]);
 
-  const validateField = useCallback((field: string, value: string) => {
+  const validateField = useCallback((field: string, value: any) => {
     const errors: Record<string, string> = {};
     switch (field) {
       case 'name':
         if (!value.trim()) {
           errors.name = 'Le nom de l\'événement est requis';
-        } else if (value.length < 3) {
-          errors.name = 'Le nom doit contenir au moins 3 caractères';
         }
         break;
       case 'organizerId':
         if (!value) {
           errors.organizerId = 'Un organisateur est requis';
+        }
+        break;
+      case 'image':
+        // if (value && !isValidUrl(value)) {
+        //   errors.image = 'L\'URL de l\'image doit être valide';
+        // }
+        break;
+      case 'videos':
+        if (value.some((url: string) => !isValidUrl(url))) {
+          errors.videos = 'Toutes les URLs de vidéos doivent être valides';
+        }
+        break;
+      case 'startDate':
+        if (value && !isValidDate(value)) {
+          errors.startDate = 'La date de début doit être au format ISO';
+        }
+        break;
+      case 'endDate':
+        if (value && !isValidDate(value)) {
+          errors.endDate = 'La date de fin doit être au format ISO';
+        } else if (value && startDate && new Date(value) <= new Date(startDate)) {
+          errors.endDate = 'La date de fin doit être postérieure à la date de début';
         }
         break;
     }
@@ -80,7 +80,37 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
       [field]: errors[field] || '',
     }));
     return !errors[field];
-  }, []);
+  }, [startDate]);
+
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const isValidDate = (date: string) => {
+    return !isNaN(new Date(date).getTime());
+  };
+
+  const handleAddVideo = () => {
+    setVideos([...videos, '']);
+  };
+
+  const handleVideoChange = (index: number, value: string) => {
+    const newVideos = [...videos];
+    newVideos[index] = value;
+    setVideos(newVideos);
+    validateField('videos', newVideos);
+  };
+
+  const handleRemoveVideo = (index: number) => {
+    const newVideos = videos.filter((_, i) => i !== index);
+    setVideos(newVideos);
+    validateField('videos', newVideos);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,19 +118,30 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
     setSuccess(null);
 
     const isNameValid = validateField('name', name);
-    const isOrganizerValid = validateField('organizerId', organizerId);
+    const isImageValid = validateField('image', image);
+    const isVideosValid = validateField('videos', videos);
+    const isStartDateValid = validateField('startDate', startDate);
+    const isEndDateValid = validateField('endDate', endDate);
 
-    if (!isNameValid || !isOrganizerValid) {
+    if (!isNameValid || !isImageValid || !isVideosValid || !isStartDateValid || !isEndDateValid) {
       setError('Veuillez corriger les erreurs dans le formulaire');
       return;
     }
 
     setLoading(true);
     try {
+      const isoStartDate = startDate ? new Date(startDate).toISOString() : undefined;
+      const isoEndDate = endDate ? new Date(endDate).toISOString() : undefined;
+
       await onSubmit({
         name: name.trim(),
         description: description.trim() || undefined,
-        organizerId,
+        videos: videos.filter((url) => url.trim()).length > 0 ? videos.filter((url) => url.trim()) : undefined,
+        organizerId: userId || "",
+        image: image.trim() || undefined,
+        startDate: isoStartDate,
+        endDate: isoEndDate,
+        location: location.trim() || undefined,
         status,
       });
       setSuccess(event ? 'Événement modifié avec succès' : 'Événement créé avec succès');
@@ -212,45 +253,149 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
               </div>
             </div>
             <div className="space-y-2">
-              <label htmlFor="organizerId" className="block text-sm font-semibold text-gray-700">
-                Organisateur *
+              <label className="block text-sm font-semibold text-gray-700">
+                Vidéos
               </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <select
-                  id="organizerId"
-                  value={organizerId}
-                  onChange={(e) => {
-                    setOrganizerId(e.target.value);
-                    validateField('organizerId', e.target.value);
-                  }}
-                  disabled={organizersLoading}
-                  className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-red-500 ${
-                    validationErrors.organizerId
-                      ? 'border-red-300 focus:border-red-500'
-                      : 'border-gray-200 focus:border-red-500 hover:border-red-300'
-                  } bg-white disabled:bg-gray-50 disabled:cursor-not-allowed appearance-none cursor-pointer`}
-                  required
-                >
-                  <option value="">Sélectionnez un organisateur</option>
-                  {organizers.map((org) => (
-                    <option key={org.id} value={org.id}>
-                      {org.firstName} {org.lastName}
-                    </option>
-                  ))}
-                </select>
-                {organizersLoading && (
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <Loader2 className="animate-spin h-5 w-5 text-red-500" />
+              {videos.map((video, index) => (
+                <div key={index} className="flex items-center gap-2 mb-2">
+                  <div className="relative flex-1">
+                    <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <input
+                      type="text"
+                      value={video}
+                      onChange={(e) => handleVideoChange(index, e.target.value)}
+                      className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-red-500 ${
+                        validationErrors.videos
+                          ? 'border-red-300 focus:border-red-500'
+                          : 'border-gray-200 focus:border-red-500 hover:border-red-300'
+                      }`}
+                      placeholder="URL de la vidéo"
+                    />
                   </div>
-                )}
-              </div>
-              {validationErrors.organizerId && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveVideo(index)}
+                    className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-all duration-200"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              ))}
+              {validationErrors.videos && (
                 <p className="text-sm text-red-600 flex items-center gap-1">
                   <AlertCircle className="h-4 w-4" />
-                  {validationErrors.organizerId}
+                  {validationErrors.videos}
                 </p>
               )}
+              <button
+                type="button"
+                onClick={handleAddVideo}
+                className="text-sm text-red-600 hover:text-red-800 font-medium"
+              >
+                + Ajouter une vidéo
+              </button>
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="image" className="block text-sm font-semibold text-gray-700">
+                Image
+              </label>
+              <div className="relative">
+                <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  id="image"
+                  type="text"
+                  value={image}
+                  onChange={(e) => {
+                    setImage(e.target.value);
+                    validateField('image', e.target.value);
+                  }}
+                  className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-red-500 ${
+                    validationErrors.image
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-gray-200 focus:border-red-500 hover:border-red-300'
+                  }`}
+                  placeholder="URL de l'image"
+                />
+              </div>
+              {validationErrors.image && (
+                <p className="text-sm text-red-600 flex items-center gap-1">
+                  <AlertCircle className="h-4 w-4" />
+                  {validationErrors.image}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="startDate" className="block text-sm font-semibold text-gray-700">
+                Date de début
+              </label>
+              <div className="relative">
+                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  id="startDate"
+                  type="datetime-local"
+                  value={startDate}
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                    validateField('startDate', e.target.value);
+                    if (endDate) validateField('endDate', endDate);
+                  }}
+                  className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-red-500 ${
+                    validationErrors.startDate
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-gray-200 focus:border-red-500 hover:border-red-300'
+                  }`}
+                />
+              </div>
+              {validationErrors.startDate && (
+                <p className="text-sm text-red-600 flex items-center gap-1">
+                  <AlertCircle className="h-4 w-4" />
+                  {validationErrors.startDate}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="endDate" className="block text-sm font-semibold text-gray-700">
+                Date de fin
+              </label>
+              <div className="relative">
+                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  id="endDate"
+                  type="datetime-local"
+                  value={endDate}
+                  onChange={(e) => {
+                    setEndDate(e.target.value);
+                    validateField('endDate', e.target.value);
+                  }}
+                  className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-red-500 ${
+                    validationErrors.endDate
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-gray-200 focus:border-red-500 hover:border-red-300'
+                  }`}
+                />
+              </div>
+              {validationErrors.endDate && (
+                <p className="text-sm text-red-600 flex items-center gap-1">
+                  <AlertCircle className="h-4 w-4" />
+                  {validationErrors.endDate}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="location" className="block text-sm font-semibold text-gray-700">
+                Lieu
+              </label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  id="location"
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 hover:border-red-300 transition-all duration-200"
+                  placeholder="Lieu de l'émission"
+                />
+              </div>
             </div>
             <div className="space-y-2">
               <label htmlFor="status" className="block text-sm font-semibold text-gray-700">
@@ -264,9 +409,10 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
                   className="w-full pl-4 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 hover:border-red-300 transition-all duration-200 bg-white appearance-none cursor-pointer"
                   required
                 >
-                  <option value="active">Actif</option>
-                  <option value="completed">Terminé</option>
-                  <option value="canceled">Annulé</option>
+                  <option value="coming">À venir</option>
+                  <option value="ongoing">En cours</option>
+                  <option value="finished">Terminé</option>
+                  <option value="cancelled">Annulé</option>
                 </select>
               </div>
             </div>

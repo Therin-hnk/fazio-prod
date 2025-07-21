@@ -176,9 +176,10 @@ export default function EventFilter({ onFilterChange }: EventFilterProps) {
                   className="w-full pl-4 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 bg-white hover:border-red-300 text-gray-900 font-medium appearance-none cursor-pointer"
                 >
                   <option value="">Tous les statuts</option>
-                  <option value="active">Actif</option>
-                  <option value="completed">Terminé</option>
-                  <option value="canceled">Annulé</option>
+                  <option value="coming">À venir</option>
+                  <option value="ongoing">En cours</option>
+                  <option value="finished">Terminé</option>
+                  <option value="cancelled">Annulé</option>
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
               </div>
@@ -194,7 +195,7 @@ export default function EventFilter({ onFilterChange }: EventFilterProps) {
                   type="text"
                   value={search}
                   onChange={(e) => handleSearchChange(e.target.value)}
-                  placeholder="Nom, description..."
+                  placeholder="Nom, description, lieu..."
                   className="w-full pl-11 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 hover:border-red-300 placeholder-gray-400 text-gray-900 font-medium"
                 />
                 {search && (
@@ -231,7 +232,9 @@ export default function EventFilter({ onFilterChange }: EventFilterProps) {
                 {selectedStatus && (
                   <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-red-100 to-red-200 text-red-800 text-sm font-medium rounded-full border border-red-300 shadow-sm">
                     <Filter className="h-3 w-3" />
-                    {selectedStatus}
+                    {selectedStatus === 'coming' ? 'À venir' :
+                     selectedStatus === 'ongoing' ? 'En cours' :
+                     selectedStatus === 'finished' ? 'Terminé' : 'Annulé'}
                     <button
                       onClick={clearStatus}
                       className="hover:text-red-900 transition-colors duration-200 ml-1 hover:bg-red-300 rounded-full p-0.5"
@@ -241,7 +244,7 @@ export default function EventFilter({ onFilterChange }: EventFilterProps) {
                   </span>
                 )}
                 {search && (
-                  <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to*r from-red-100 to-red-200 text-red-800 text-sm font-medium rounded-full border border-red-300 shadow-sm">
+                  <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-red-100 to-red-200 text-red-800 text-sm font-medium rounded-full border border-red-300 shadow-sm">
                     <Search className="h-3 w-3" />
                     "{search}"
                     <button
