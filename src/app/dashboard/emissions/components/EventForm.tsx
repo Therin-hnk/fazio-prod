@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { Event, Organizer } from '../../types/event';
-import { Calendar, FileText, User, CheckCircle, AlertCircle, X, Save, Loader2, Link, MapPin } from 'lucide-react';
+import { memo, useState, useCallback } from 'react';
+import { Event } from '../../types/event';
+import { Calendar, FileText, CheckCircle, AlertCircle, X, Save, Loader2, Link, MapPin } from 'lucide-react';
 
 interface EventFormProps {
   event?: Event;
@@ -20,67 +20,73 @@ interface EventFormProps {
   onCancel: () => void;
 }
 
-export default function EventForm({ event, onSubmit, onCancel }: EventFormProps) {
+function EventForm({ event, onSubmit, onCancel }: EventFormProps) {
   const [name, setName] = useState(event?.name || '');
   const [description, setDescription] = useState(event?.description || '');
-  const [videos, setVideos] = useState<string[]>(event?.videos || []);
-  const [organizerId, setOrganizerId] = useState(event?.organizerId || '');
+  const [videos, setVideos] = useState<string[]>(
+    event?.videos
+      ? event.videos.map((v) =>
+          typeof v === 'string'
+            ? v
+            : typeof v === 'object' && v !== null && 'url' in v
+              ? (v as { url: string }).url
+              : ''
+        )
+      : []
+  );
   const [image, setImage] = useState(event?.image || '');
-  const [startDate, setStartDate] = useState(event?.startDate || '');
-  const [endDate, setEndDate] = useState(event?.endDate || '');
+  const [startDate, setStartDate] = useState(
+    event?.startDate ? new Date(event.startDate).toISOString().slice(0, 16) : ''
+  );
+  const [endDate, setEndDate] = useState(
+    event?.endDate ? new Date(event.endDate).toISOString().slice(0, 16) : ''
+  );
   const [location, setLocation] = useState(event?.location || '');
   const [status, setStatus] = useState<string>(event?.status || 'coming');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [organizersLoading, setOrganizersLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const userId = typeof window !== 'undefined' ? localStorage.getItem('managerId') : null;
 
-
-  const validateField = useCallback((field: string, value: any) => {
-    const errors: Record<string, string> = {};
-    switch (field) {
-      case 'name':
-        if (!value.trim()) {
-          errors.name = 'Le nom de l\'événement est requis';
-        }
-        break;
-      case 'organizerId':
-        if (!value) {
-          errors.organizerId = 'Un organisateur est requis';
-        }
-        break;
-      case 'image':
-        // if (value && !isValidUrl(value)) {
-        //   errors.image = 'L\'URL de l\'image doit être valide';
-        // }
-        break;
-      case 'videos':
-        if (value.some((url: string) => !isValidUrl(url))) {
-          errors.videos = 'Toutes les URLs de vidéos doivent être valides';
-        }
-        break;
-      case 'startDate':
-        if (value && !isValidDate(value)) {
-          errors.startDate = 'La date de début doit être au format ISO';
-        }
-        break;
-      case 'endDate':
-        if (value && !isValidDate(value)) {
-          errors.endDate = 'La date de fin doit être au format ISO';
-        } else if (value && startDate && new Date(value) <= new Date(startDate)) {
-          errors.endDate = 'La date de fin doit être postérieure à la date de début';
-        }
-        break;
-    }
-    setValidationErrors((prev) => ({
-      ...prev,
-      [field]: errors[field] || '',
-    }));
-    return !errors[field];
-  }, [startDate]);
+  const validateField = useCallback(
+    (field: string, value: any) => {
+      const errors: Record<string, string> = {};
+      switch (field) {
+        case 'name':
+          if (!value.trim()) {
+            errors.name = "Le nom de l'événement est requis";
+          }
+          break;
+        case 'image':
+          break;
+        case 'videos':
+          if (value.some((url: string) => url && !isValidUrl(url))) {
+            errors.videos = 'Toutes les URLs de vidéos doivent être valides';
+          }
+          break;
+        case 'startDate':
+          if (value && !isValidDate(value)) {
+            errors.startDate = 'La date de début doit être au format ISO';
+          }
+          break;
+        case 'endDate':
+          if (value && !isValidDate(value)) {
+            errors.endDate = 'La date de fin doit être au format ISO';
+          } else if (value && startDate && new Date(value) <= new Date(startDate)) {
+            errors.endDate = 'La date de fin doit être postérieure à la date de début';
+          }
+          break;
+      }
+      setValidationErrors((prev) => ({
+        ...prev,
+        [field]: errors[field] || '',
+      }));
+      return !errors[field];
+    },
+    [startDate]
+  );
 
   const isValidUrl = (url: string) => {
     try {
@@ -137,7 +143,7 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
         name: name.trim(),
         description: description.trim() || undefined,
         videos: videos.filter((url) => url.trim()).length > 0 ? videos.filter((url) => url.trim()) : undefined,
-        organizerId: userId || "",
+        organizerId: userId || '',
         image: image.trim() || undefined,
         startDate: isoStartDate,
         endDate: isoEndDate,
@@ -145,6 +151,7 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
         status,
       });
       setSuccess(event ? 'Événement modifié avec succès' : 'Événement créé avec succès');
+      setValidationErrors({});
       setTimeout(() => onCancel(), 1500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
@@ -163,6 +170,8 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
     <div
       className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
       onClick={handleOverlayClick}
+      aria-modal="true"
+      role="dialog"
     >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in fade-in-0 zoom-in-95 duration-300">
         <div className="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4 rounded-t-2xl">
@@ -173,7 +182,7 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">
-                  {event ? 'Modifier l\'émission' : 'Ajouter une émission'}
+                  {event ? "Modifier l'émission" : "Ajouter une émission"}
                 </h2>
                 <p className="text-red-100 text-sm">
                   {event ? 'Mettez à jour les informations' : 'Créez une nouvelle émission'}
@@ -183,6 +192,7 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
             <button
               onClick={onCancel}
               className="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors duration-200"
+              aria-label="Fermer le formulaire"
             >
               <X className="h-5 w-5" />
             </button>
@@ -190,7 +200,10 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
         </div>
         <div className="p-6">
           {success && (
-            <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-400 rounded-r-lg animate-pulse">
+            <div
+              className="mb-6 p-4 bg-green-50 border-l-4 border-green-400 rounded-r-lg animate-pulse"
+              aria-live="polite"
+            >
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-green-500" />
                 <p className="text-sm font-medium text-green-700">{success}</p>
@@ -198,7 +211,7 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
             </div>
           )}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-r-lg">
+            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-r-lg" aria-live="assertive">
               <div className="flex items-center gap-2">
                 <AlertCircle className="h-5 w-5 text-red-500" />
                 <p className="text-sm font-medium text-red-700">{error}</p>
@@ -227,10 +240,12 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
                   }`}
                   placeholder="Nom de l'émission"
                   required
+                  aria-invalid={!!validationErrors.name}
+                  aria-describedby={validationErrors.name ? 'name-error' : undefined}
                 />
               </div>
               {validationErrors.name && (
-                <p className="text-sm text-red-600 flex items-center gap-1">
+                <p id="name-error" className="text-sm text-red-600 flex items-center gap-1">
                   <AlertCircle className="h-4 w-4" />
                   {validationErrors.name}
                 </p>
@@ -253,9 +268,7 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
               </div>
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">
-                Vidéos
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Vidéos</label>
               {videos.map((video, index) => (
                 <div key={index} className="flex items-center gap-2 mb-2">
                   <div className="relative flex-1">
@@ -270,19 +283,21 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
                           : 'border-gray-200 focus:border-red-500 hover:border-red-300'
                       }`}
                       placeholder="URL de la vidéo"
+                      aria-describedby={validationErrors.videos ? `video-error-${index}` : undefined}
                     />
                   </div>
                   <button
                     type="button"
                     onClick={() => handleRemoveVideo(index)}
                     className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-all duration-200"
+                    aria-label={`Supprimer la vidéo ${index + 1}`}
                   >
                     <X className="h-5 w-5" />
                   </button>
                 </div>
               ))}
               {validationErrors.videos && (
-                <p className="text-sm text-red-600 flex items-center gap-1">
+                <p id="videos-error" className="text-sm text-red-600 flex items-center gap-1">
                   <AlertCircle className="h-4 w-4" />
                   {validationErrors.videos}
                 </p>
@@ -291,6 +306,7 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
                 type="button"
                 onClick={handleAddVideo}
                 className="text-sm text-red-600 hover:text-red-800 font-medium"
+                aria-label="Ajouter une nouvelle vidéo"
               >
                 + Ajouter une vidéo
               </button>
@@ -315,10 +331,12 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
                       : 'border-gray-200 focus:border-red-500 hover:border-red-300'
                   }`}
                   placeholder="URL de l'image"
+                  aria-invalid={!!validationErrors.image}
+                  aria-describedby={validationErrors.image ? 'image-error' : undefined}
                 />
               </div>
               {validationErrors.image && (
-                <p className="text-sm text-red-600 flex items-center gap-1">
+                <p id="image-error" className="text-sm text-red-600 flex items-center gap-1">
                   <AlertCircle className="h-4 w-4" />
                   {validationErrors.image}
                 </p>
@@ -344,10 +362,12 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
                       ? 'border-red-300 focus:border-red-500'
                       : 'border-gray-200 focus:border-red-500 hover:border-red-300'
                   }`}
+                  aria-invalid={!!validationErrors.startDate}
+                  aria-describedby={validationErrors.startDate ? 'startDate-error' : undefined}
                 />
               </div>
               {validationErrors.startDate && (
-                <p className="text-sm text-red-600 flex items-center gap-1">
+                <p id="startDate-error" className="text-sm text-red-600 flex items-center gap-1">
                   <AlertCircle className="h-4 w-4" />
                   {validationErrors.startDate}
                 </p>
@@ -372,10 +392,12 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
                       ? 'border-red-300 focus:border-red-500'
                       : 'border-gray-200 focus:border-red-500 hover:border-red-300'
                   }`}
+                  aria-invalid={!!validationErrors.endDate}
+                  aria-describedby={validationErrors.endDate ? 'endDate-error' : undefined}
                 />
               </div>
               {validationErrors.endDate && (
-                <p className="text-sm text-red-600 flex items-center gap-1">
+                <p id="endDate-error" className="text-sm text-red-600 flex items-center gap-1">
                   <AlertCircle className="h-4 w-4" />
                   {validationErrors.endDate}
                 </p>
@@ -411,8 +433,8 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
                 >
                   <option value="coming">À venir</option>
                   <option value="ongoing">En cours</option>
-                  <option value="finished">Terminé</option>
-                  <option value="cancelled">Annulé</option>
+                  <option value="completed">Terminé</option>
+                  <option value="canceled">Annulé</option>
                 </select>
               </div>
             </div>
@@ -422,13 +444,15 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
                 onClick={onCancel}
                 disabled={loading}
                 className="flex-1 sm:flex-none px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Annuler le formulaire"
               >
                 Annuler
               </button>
               <button
                 type="submit"
-                disabled={loading || organizersLoading}
+                disabled={loading}
                 className="flex-1 sm:flex-none px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+                aria-label={event ? 'Mettre à jour' : 'Créer'}
               >
                 {loading ? (
                   <>
@@ -449,3 +473,5 @@ export default function EventForm({ event, onSubmit, onCancel }: EventFormProps)
     </div>
   );
 }
+
+export default memo(EventForm);

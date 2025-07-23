@@ -34,8 +34,20 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
       ),
     },
     {
-      label: 'EMissions',
+      label: 'Emissions',
       href: '/dashboard/emissions',
+      key: 'emission',
+      icon: (isActive: boolean) => (
+        <Tv2
+          className={isActive ? 'text-[#1E3A8A]' : 'text-gray-600'}
+          size={20}
+          aria-hidden="true"
+        />
+      ),
+    },
+    {
+      label: 'Tournois',
+      href: '/dashboard/tournois',
       key: 'emission',
       icon: (isActive: boolean) => (
         <Tv2
@@ -135,7 +147,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Link
+                <a
                   href={item.href}
                   onClick={onClose}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
@@ -147,7 +159,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
                 >
                   <span className="text-lg bg-white rounded-md p-2">{item.icon(isActive)}</span>
                   <span className="text-sm">{item.label}</span>
-                </Link>
+                </a>
               </motion.div>
             );
           })}
