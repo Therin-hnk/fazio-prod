@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import EventCard from './EventCard';
@@ -82,6 +82,39 @@ const events: Event[] = [
 ];
 
 const EventsSection: React.FC = () => {
+   const [events, setEvents] = useState<Event[]>([]);
+     const [loading, setLoading] = useState(true);
+     const [error, setError] = useState<string | null>(null);
+     const [success, setSuccess] = useState<string | null>(null);
+     const [showForm, setShowForm] = useState(false);
+     const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+     const [showDeleteModal, setShowDeleteModal] = useState<Event | null>(null);
+     const [selectedEventIds, setSelectedEventIds] = useState<string[]>([]);
+     const [filterParams, setFilterParams] = useState<{
+       organizerId: string | null;
+       status: string | null;
+       search: string;
+     }>({ organizerId: null, status: null, search: '' });
+     
+  useEffect(() => {
+      const loadEvents = async () => {
+        try {
+          const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+          };
+          const res = await fetch('/api/public/events', { headers });
+          if (!res.ok) throw new Error('Erreur lors de la récupération des événements.');
+          const data = await res.json();
+          setEvents(data);
+          setLoading(false);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+          setLoading(false);
+        }
+      };
+      loadEvents();
+    }, []);
+
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 6;

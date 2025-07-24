@@ -5,44 +5,31 @@ import getManagerTokenFromCookies from "@/app/lib/get_manager_token_from_cookies
 export const dynamic = 'force-dynamic';
 
 // Base URL de l'API externe
-const{ API_URL, APP_API_KEY } = getUrlParams();
+const{ API_URL, NEXT_PUBLIC_API_KEY } = getUrlParams();
 
 export async function GET(request: Request) {
 
   try {
-    const userId = request.headers.get("x-user-id");
-    if (!userId) {
-      return NextResponse.json({ error: "userId non fourni" }, { status: 400 });
-    }
+    // console.log("API_URL:", API_URL);
+    // console.log("APP_API_KEY:", NEXT_PUBLIC_API_KEY );
 
-    const token = getManagerTokenFromCookies();
-    if (!token) {
-      return NextResponse.json({ error: "Token non fourni" }, { status: 401 });
-    }
-
-    console.log("Récupération des utilisateurs pour l'ID:", userId);
-    console.log("Token utilisé:", token);
-    console.log("API_URL:", API_URL);
-    console.log("APP_API_KEY:", APP_API_KEY);
-
-    const response = await fetch(`${API_URL}/admin/${userId}/events`, {
+    const response = await fetch(`${API_URL}/public/events`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${APP_API_KEY}`,
-        "X-Auth-Token": token,
+        "Authorization": `Bearer ${NEXT_PUBLIC_API_KEY}`,
       },
     });
 
     // console.log(response.status, response.statusText);
 
     const responseData = await response.json();
-    console.log(responseData);
+    // console.log(responseData);
 
     if (!response.ok) {
       return Response.json(
         {
-          error: "Erreur lors de la récupération des évenements",
+          error: "Erreur lors de la récupération des utilisateurs",
           message: responseData.message,
         },
         { status: response.status }
