@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, SVGProps } from 'react';
-import { Facebook, Instagram, Linkedin, Send } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Send, Youtube } from 'lucide-react';
 
 // Interface pour une information de contact
 interface ContactInfoItem {
@@ -12,7 +12,7 @@ interface ContactInfoItem {
 
 // Interface pour les liens des réseaux sociaux
 interface SocialLink {
-  network: 'facebook' | 'twitter' | 'instagram' | 'linkedin' | 'tiktok';
+  network: 'facebook' | 'twitter' | 'instagram' | 'linkedin' | 'youtube';
   link: string;
 }
 
@@ -59,6 +59,8 @@ const getSocialIcon = (network: SocialLink['network']) => {
       return <Instagram {...iconProps} />;
     case 'linkedin':
       return <Linkedin {...iconProps} />;
+    case 'youtube':
+      return <Youtube {...iconProps} />;
     default:
       return null;
   }
@@ -88,7 +90,6 @@ const ContactAdressSection: React.FC<ContactSectionProps> = ({
   contactInfo,
   socialLinks,
   onSubmit,
-  privacyPolicyLink = "/politique-de-confidentialite"
 }) => {
   // État du formulaire
   const [formData, setFormData] = useState<ContactFormData>({
@@ -149,7 +150,7 @@ const ContactAdressSection: React.FC<ContactSectionProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-2 md:p-10 md:gap-10 bg-white">
+    <div  id='contact-info' className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-2 md:p-10 md:gap-10 bg-white">
       {/* Section Informations de contact */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
         <h2 className="text-xl font-bold text-blue-600 mb-6">

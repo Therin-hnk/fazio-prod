@@ -43,7 +43,7 @@ const MapIframe: React.FC<MapIframeProps> = ({
       </div>
 
       {/* Zone principale avec iframe */}
-      <div className="absolute inset-4 bg-gray-700 rounded-md shadow-lg overflow-hidden">
+      <div className="absolute inset-4 bg-blue-700 rounded-md shadow-lg overflow-hidden">
         {/* En-tête avec titre */}
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
           <div className="bg-white px-4 py-2 rounded shadow-md">

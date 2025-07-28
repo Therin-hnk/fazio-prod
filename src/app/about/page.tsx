@@ -1,11 +1,11 @@
 "use client"
 import React from 'react';
-import Mission from '../components/a-propos/Mission';
-import NotreHistoire from '../components/a-propos/History';
-import ValueSection from '../components/a-propos/ValueSection';
-import NotreEquipe from '../components/a-propos/TeamSection';
-import StatsSection from '../components/a-propos/StatsSection';
-import PartnersSection from '../components/a-propos/PartnerSection';
+import Mission from '../components/about/Mission';
+import NotreHistoire from '../components/about/History';
+import ValueSection from '../components/about/ValueSection';
+import NotreEquipe from '../components/about/TeamSection';
+import StatsSection from '../components/about/StatsSection';
+import PartnersSection from '../components/about/PartnerSection';
 
 const AboutPage: React.FC = () => {
   return (
