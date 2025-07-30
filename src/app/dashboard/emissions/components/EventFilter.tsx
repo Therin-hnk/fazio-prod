@@ -24,6 +24,7 @@ function EventFilter({ onFilterChange }: EventFilterProps) {
   const [error, setError] = useState<string>('');
   const [isExpanded, setIsExpanded] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedOnFilterChange = useCallback(
     debounce((organizerId: string | null, status: string | null, searchTerm: string) => {
       onFilterChange(organizerId, status, searchTerm);

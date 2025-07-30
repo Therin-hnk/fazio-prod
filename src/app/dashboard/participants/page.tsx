@@ -22,7 +22,7 @@ export default function ParticipantsPage() {
   const [participantToDelete, setParticipantToDelete] = useState<Participant | null | undefined>(null);
   const userId = typeof window !== 'undefined' ? localStorage.getItem('managerId') : null;
 
-  const getHeaders = (): Record<string, string> => {
+  const getHeaders = useCallback((): Record<string, string> => {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
@@ -30,7 +30,7 @@ export default function ParticipantsPage() {
       headers['x-user-id'] = userId;
     }
     return headers;
-  };
+  }, [userId]);
 
   const fetchParticipants = useCallback(async () => {
     try {
@@ -44,7 +44,7 @@ export default function ParticipantsPage() {
     } catch (error) {
       console.error('Erreur:', error);
     }
-  }, []);
+  }, [getHeaders]);
 
   const fetchEvents = useCallback(async () => {
     try {
@@ -57,7 +57,7 @@ export default function ParticipantsPage() {
     } catch (error) {
       console.error('Erreur:', error);
     }
-  }, []);
+  }, [getHeaders]);
 
   useEffect(() => {
     fetchParticipants();
@@ -115,8 +115,6 @@ export default function ParticipantsPage() {
         headers: getHeaders(),
         body: JSON.stringify(body),
       });
-
-      // console.log('Response:', response);
 
       if (!response.ok) throw new Error('Erreur lors de la soumission');
       setIsFormOpen(false);

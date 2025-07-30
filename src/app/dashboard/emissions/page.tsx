@@ -52,7 +52,7 @@ export default function EventsPage() {
       }
     };
     loadEvents();
-  }, []);
+  },);
 
   const handleFilterChange = useCallback(
     (organizerId: string | null, status: string | null, search: string) => {

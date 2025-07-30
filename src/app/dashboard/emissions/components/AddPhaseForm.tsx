@@ -83,7 +83,7 @@ function AddPhaseForm({ event, onAddPhase }: AddPhaseFormProps) {
                   type="text"
                   value={phaseForm.name}
                   onChange={(e) => setPhaseForm({ ...phaseForm, name: e.target.value })}
-                  className="p-3 p-3 pl-10 w-full outline-none outline-none rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-500 transition-colors duration-300 text-sm placeholder-gray-400"
+                  className="p-3 pl-10 w-full outline-none rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-2 focus:ring-red-500 transition-colors duration-300 text-sm placeholder-gray-400"
                   placeholder="Ex: Phase de qualification"
                   required
                   aria-required="true"

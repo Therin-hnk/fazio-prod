@@ -1,6 +1,7 @@
 'use client';
 
 import { Participant } from '../../types/participant';
+import Image from 'next/image';
 import { X } from 'lucide-react';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
@@ -58,7 +59,7 @@ function ParticipantDetails({ participant, onClose }: ParticipantDetailsProps) {
           </div>
           <div>
             <h3 className="text-sm font-medium text-gray-700">Date de naissance</h3>
-            <p className="text-sm text-gray-900">{formatDate(participant.birthDate)}</p>
+            <p className="text-sm text-gray-900">{formatDate(participant.birthDate as string)}</p>
           </div>
           <div>
             <h3 className="text-sm font-medium text-gray-700">Événement</h3>
@@ -71,7 +72,7 @@ function ParticipantDetails({ participant, onClose }: ParticipantDetailsProps) {
           <div>
             <h3 className="text-sm font-medium text-gray-700">URL de l’avatar</h3>
             {participant.avatarUrl ? (
-              <img
+              <Image
                 src={participant.avatarUrl}
                 alt={`Avatar de ${participant.firstName} ${participant.lastName}`}
                 className="h-16 w-16 object-cover rounded-full"

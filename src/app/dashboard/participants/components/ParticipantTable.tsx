@@ -153,7 +153,7 @@ function ParticipantTable({
                     <div className="text-sm text-gray-900">{participant.matricule || 'N/A'}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{formatDate(participant.birthDate)}</div>
+                    <div className="text-sm text-gray-900">{formatDate(participant.birthDate as string)}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{getTotalVotes(participant.votes)}</div>

@@ -87,7 +87,7 @@ function DeleteEventModal({ event, selectedEventCount = 0, onConfirm, onCancel }
                 </>
               ) : (
                 <>
-                  Voulez-vous vraiment supprimer l'émission{' '}
+                  Voulez-vous vraiment supprimer l&apos;émission{' '}
                   <span className="font-semibold text-gray-900">{event?.name}</span> ?
                 </>
               )}

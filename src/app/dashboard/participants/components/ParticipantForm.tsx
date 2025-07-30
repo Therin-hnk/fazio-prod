@@ -189,7 +189,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
               className="p-2 text-white/80 hover:text-white hover:bg-white/20 rounded-xl transition-all duration-200"
               aria-label="Fermer le formulaire"
             >
-              <X className="h-6 w-6" />
+              <X className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -208,7 +208,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
             <div className="space-y-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                  <User className="h-5 w-5 text-red-600" />
+                  <User className="h-5 w-5 text-red-600" aria-hidden="true" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800">Informations personnelles</h3>
               </div>
@@ -235,11 +235,11 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                       } focus:ring-4 focus:outline-none bg-gray-50/50 focus:bg-white`}
                       placeholder="Entrez le prénom"
                     />
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" aria-hidden="true" />
                   </div>
                   {validationErrors.firstName && (
                     <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="h-4 w-4" />
+                      <AlertCircle className="h-4 w-4" aria-hidden="true" />
                       {validationErrors.firstName}
                     </p>
                   )}
@@ -266,11 +266,11 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                       } focus:ring-4 focus:outline-none bg-gray-50/50 focus:bg-white`}
                       placeholder="Entrez le nom"
                     />
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" aria-hidden="true" />
                   </div>
                   {validationErrors.lastName && (
                     <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="h-4 w-4" />
+                      <AlertCircle className="h-4 w-4" aria-hidden="true" />
                       {validationErrors.lastName}
                     </p>
                   )}
@@ -290,7 +290,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                       className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-red-500 focus:ring-4 focus:ring-red-500/20 focus:outline-none transition-all duration-200 bg-gray-50/50 focus:bg-white hover:border-gray-300"
                       placeholder="Numéro de matricule"
                     />
-                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" aria-hidden="true" />
                   </div>
                 </div>
 
@@ -307,7 +307,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                       onChange={(e) => setBirthDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
                       className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-red-500 focus:ring-4 focus:ring-red-500/20 focus:outline-none transition-all duration-200 bg-gray-50/50 focus:bg-white hover:border-gray-300"
                     />
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" aria-hidden="true" />
                   </div>
                 </div>
               </div>
@@ -326,7 +326,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                     className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-red-500 focus:ring-4 focus:ring-red-500/20 focus:outline-none transition-all duration-200 bg-gray-50/50 focus:bg-white hover:border-gray-300 resize-none"
                     placeholder="Description du participant..."
                   />
-                  <FileText className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                  <FileText className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" aria-hidden="true" />
                 </div>
               </div>
             </div>
@@ -335,7 +335,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
             <div className="space-y-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                  <Calendar className="h-5 w-5 text-blue-600" />
+                  <Calendar className="h-5 w-5 text-blue-600" aria-hidden="true" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800">Événement et médias</h3>
               </div>
@@ -368,7 +368,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                   </select>
                   {validationErrors.eventId && (
                     <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="h-4 w-4" />
+                      <AlertCircle className="h-4 w-4" aria-hidden="true" />
                       {validationErrors.eventId}
                     </p>
                   )}
@@ -377,7 +377,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                 {/* Avatar URL */}
                 <div className="group">
                   <label htmlFor="avatarUrl" className="block text-sm font-medium text-gray-700 mb-2">
-                    URL de l'avatar
+                    URL de l&apos;avatar
                   </label>
                   <div className="relative">
                     <input
@@ -395,11 +395,14 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                       } focus:ring-4 focus:outline-none bg-gray-50/50 focus:bg-white`}
                       placeholder="https://example.com/avatar.jpg"
                     />
-                    <Image className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                    <Image
+                      className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors"
+                      aria-hidden="true"
+                    />
                   </div>
                   {validationErrors.avatarUrl && (
                     <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="h-4 w-4" />
+                      <AlertCircle className="h-4 w-4" aria-hidden="true" />
                       {validationErrors.avatarUrl}
                     </p>
                   )}
@@ -409,7 +412,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
               {/* Section vidéos */}
               <div className="bg-gray-50 rounded-xl p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <Video className="h-5 w-5 text-purple-600" />
+                  <Video className="h-5 w-5 text-purple-600" aria-hidden="true" />
                   <h4 className="font-medium text-gray-800">Vidéos du participant</h4>
                   <span className="text-sm text-gray-500">({videos.length}/10)</span>
                 </div>
@@ -424,7 +427,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                       className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 focus:outline-none transition-all duration-200 bg-white hover:border-gray-300"
                       placeholder="URL de la vidéo (YouTube, Vimeo...)"
                     />
-                    <Video className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-purple-500 transition-colors" />
+                    <Video className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-purple-500 transition-colors" aria-hidden="true" />
                   </div>
                   <button
                     type="button"
@@ -432,7 +435,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                     disabled={!newVideoUrl.trim() || videos.length >= 10}
                     className="px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 focus:ring-4 focus:ring-purple-500/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium"
                   >
-                    <Plus className="h-4 w-4" />
+                    <Plus className="h-4 w-4" aria-hidden="true" />
                     Ajouter
                   </button>
                 </div>
@@ -442,7 +445,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                   <div className="space-y-2">
                     {videos.map((video, index) => (
                       <div key={index} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                        <Video className="h-4 w-4 text-purple-500 flex-shrink-0" />
+                        <Video className="h-4 w-4 text-purple-500 flex-shrink-0" aria-hidden="true" />
                         <span className="text-sm text-gray-700 truncate flex-1">{video.url}</span>
                         <button
                           type="button"
@@ -450,7 +453,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                           className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
                           aria-label="Supprimer la vidéo"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-4 w-4" aria-hidden="true" />
                         </button>
                       </div>
                     ))}
@@ -459,7 +462,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
 
                 {validationErrors.videos && (
                   <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                    <AlertCircle className="h-4 w-4" />
+                    <AlertCircle className="h-4 w-4" aria-hidden="true" />
                     {validationErrors.videos}
                   </p>
                 )}
@@ -477,7 +480,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                         className="h-5 w-5 text-amber-600 focus:ring-amber-500 border-amber-300 rounded transition-all duration-200"
                       />
                     </div>
-                    <Lock className="h-5 w-5 text-amber-600" />
+                    <Lock className="h-5 w-5 text-amber-600" aria-hidden="true" />
                     <div>
                       <span className="font-medium text-amber-800">Régénérer le mot de passe</span>
                       <p className="text-sm text-amber-700">Un nouveau mot de passe sera généré et envoyé au participant</p>

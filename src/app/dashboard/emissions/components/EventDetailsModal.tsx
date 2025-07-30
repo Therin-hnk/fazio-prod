@@ -41,7 +41,7 @@ function EventDetailsModal({ event, onClose, onAddPhase, onAddParticipantToPhase
         <div className="flex items-center justify-between mb-4 border-b pb-4">
           <h2 id="details-modal-title" className="text-xl font-bold text-gray-900 flex items-center gap-2">
             <Info className="h-6 w-6 text-red-600" aria-hidden="true" />
-            Détails de l'événement : {event.id}
+            Détails de l&apos;événement : {event.id}
           </h2>
           <button
             onClick={onClose}
