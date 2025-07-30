@@ -1,21 +1,29 @@
 'use client';
 
 import { memo, useState } from 'react';
+import { Participant } from '../../types/participant';
 import { Event } from '../../types/event';
-import { Edit2, Trash2, Calendar, Eye } from 'lucide-react';
+import { Edit2, Trash2, Eye, User } from 'lucide-react';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
 
-interface EventTableProps {
+interface ParticipantTableProps {
+  participants: Participant[];
   events: Event[];
-  onEdit: (event: Event) => void;
-  onDelete: (event: Event) => void;
-  onViewDetails: (event: Event) => void;
-  onSelectEvents: (selectedIds: string[]) => void;
-  isLoading: boolean;
+  onEdit: (participant: Participant) => void;
+  onDelete: (participant: Participant) => void;
+  onView: (participant: Participant) => void;
+  onSelectParticipants: (selectedIds: string[]) => void;
 }
 
-function EventTable({ events, onEdit, onDelete, onViewDetails, onSelectEvents, isLoading }: EventTableProps) {
+function ParticipantTable({
+  participants,
+  events,
+  onEdit,
+  onDelete,
+  onView,
+  onSelectParticipants,
+}: ParticipantTableProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const handleSelect = (id: string) => {
@@ -23,18 +31,24 @@ function EventTable({ events, onEdit, onDelete, onViewDetails, onSelectEvents, i
       ? selectedIds.filter((selectedId) => selectedId !== id)
       : [...selectedIds, id];
     setSelectedIds(newSelectedIds);
-    onSelectEvents(newSelectedIds);
+    onSelectParticipants(newSelectedIds);
   };
 
   const handleSelectAll = () => {
-    if (selectedIds.length === events.length) {
+    if (selectedIds.length === participants.length) {
       setSelectedIds([]);
-      onSelectEvents([]);
+      onSelectParticipants([]);
     } else {
-      const allIds = events.map((event) => event.id);
+      const allIds = participants.map((participant) => participant.id);
       setSelectedIds(allIds);
-      onSelectEvents(allIds);
+      onSelectParticipants(allIds);
     }
+  };
+
+  const handleDelete = (participant: Participant) => {
+    setSelectedIds([participant.id]);
+    onSelectParticipants([participant.id]);
+    onDelete(participant);
   };
 
   const formatDate = (date: string | null): string => {
@@ -48,13 +62,22 @@ function EventTable({ events, onEdit, onDelete, onViewDetails, onSelectEvents, i
     }
   };
 
+  const getEventName = (eventId: string): string => {
+    const event = events.find((e) => e.id === eventId);
+    return event ? event.name : 'N/A';
+  };
+
+  const getTotalVotes = (votes: Participant['votes']): number => {
+    return votes.reduce((total, vote) => total + vote.voteCount, 0);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-gray-500" aria-hidden="true" />
+          <User className="h-5 w-5 text-gray-500" />
           <h2 className="text-lg font-semibold text-gray-900">
-            Émissions ({events.length})
+            Participants ({participants.length})
           </h2>
         </div>
       </div>
@@ -65,30 +88,26 @@ function EventTable({ events, onEdit, onDelete, onViewDetails, onSelectEvents, i
               <th className="px-6 py-3 text-left">
                 <input
                   type="checkbox"
-                  checked={selectedIds.length === events.length && events.length > 0}
+                  checked={selectedIds.length === participants.length && participants.length > 0}
                   onChange={handleSelectAll}
-                  disabled={isLoading}
                   className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded transition-colors duration-200"
-                  aria-label="Sélectionner tous les événements"
+                  aria-label="Sélectionner tous les participants"
                 />
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nom
+                Nom complet
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Description
+                Événement associé
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Participants
+                Matricule
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Tournoi
+                Date de naissance
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date de début
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date de fin
+                Nombre de votes
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
@@ -96,87 +115,74 @@ function EventTable({ events, onEdit, onDelete, onViewDetails, onSelectEvents, i
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {isLoading ? (
+            {participants.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-6 py-12 text-center">
+                <td colSpan={7} className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center justify-center">
-                    <Calendar className="h-12 w-12 text-gray-400 mb-4" aria-hidden="true" />
-                    <p className="text-sm text-gray-500">Chargement...</p>
-                  </div>
-                </td>
-              </tr>
-            ) : events.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="px-6 py-12 text-center">
-                  <div className="flex flex-col items-center justify-center">
-                    <Calendar className="h-12 w-12 text-gray-400 mb-4" aria-hidden="true" />
-                    <p className="text-sm text-gray-500">Aucune émission trouvée</p>
+                    <User className="h-12 w-12 text-gray-400 mb-4" />
+                    <p className="text-sm text-gray-500">Aucun participant trouvé</p>
                   </div>
                 </td>
               </tr>
             ) : (
-              events.map((event) => (
+              participants.map((participant) => (
                 <tr
-                  key={event.id}
+                  key={participant.id}
                   className={`hover:bg-gray-50 transition-colors duration-200 ${
-                    selectedIds.includes(event.id) ? 'bg-red-50' : ''
+                    selectedIds.includes(participant.id) ? 'bg-red-50' : ''
                   }`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <input
                       type="checkbox"
-                      checked={selectedIds.includes(event.id)}
-                      onChange={() => handleSelect(event.id)}
-                      disabled={isLoading}
+                      checked={selectedIds.includes(participant.id)}
+                      onChange={() => handleSelect(participant.id)}
                       className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded transition-colors duration-200"
-                      aria-label={`Sélectionner l'événement ${event.name}`}
+                      aria-label={`Sélectionner le participant ${participant.firstName} ${participant.lastName}`}
                     />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{event.name}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">{event.description || 'N/A'}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{event.participants.length}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {event.tournaments[0]?.name || 'N/A'}
+                    <div className="text-sm font-medium text-gray-900">
+                      {participant.firstName} {participant.lastName}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{formatDate(event.startDate)}</div>
+                    <div className="text-sm text-gray-900">{getEventName(participant.eventId)}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{formatDate(event.endDate)}</div>
+                    <div className="text-sm text-gray-900">{participant.matricule || 'N/A'}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">{formatDate(participant.birthDate)}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">{getTotalVotes(participant.votes)}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => onEdit(event)}
-                        className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-all duration-200 group"
-                        title="Modifier"
-                        aria-label={`Modifier l'événement ${event.name}`}
-                      >
-                        <Edit2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" aria-hidden="true" />
-                      </button>
-                      <button
-                        onClick={() => onDelete(event)}
-                        className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-all duration-200 group"
-                        title="Supprimer"
-                        aria-label={`Supprimer l'événement ${event.name}`}
-                      >
-                        <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" aria-hidden="true" />
-                      </button>
-                      <button
-                        onClick={() => onViewDetails(event)}
+                        onClick={() => onView(participant)}
                         className="p-2 text-green-600 hover:text-green-900 hover:bg-green-50 rounded-lg transition-all duration-200 group"
                         title="Voir les détails"
-                        aria-label={`Voir les détails de l'événement ${event.name}`}
+                        aria-label={`Voir les détails du participant ${participant.firstName} ${participant.lastName}`}
                       >
-                        <Eye className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" aria-hidden="true" />
+                        <Eye className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                      </button>
+                      <button
+                        onClick={() => onEdit(participant)}
+                        className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-all duration-200 group"
+                        title="Modifier"
+                        aria-label={`Modifier le participant ${participant.firstName} ${participant.lastName}`}
+                      >
+                        <Edit2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(participant)}
+                        className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-all duration-200 group"
+                        title="Supprimer"
+                        aria-label={`Supprimer le participant ${participant.firstName} ${participant.lastName}`}
+                      >
+                        <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
                       </button>
                     </div>
                   </td>
@@ -190,4 +196,4 @@ function EventTable({ events, onEdit, onDelete, onViewDetails, onSelectEvents, i
   );
 }
 
-export default memo(EventTable);
+export default memo(ParticipantTable);

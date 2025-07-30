@@ -22,7 +22,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Token non fourni" }, { status: 401 });
     }
 
-     const response = await fetch(`${API_URL}/admin/${userId}/events/create`, {
+    console.log(body);
+
+     const response = await fetch(`${API_URL}/admin/${userId}/phases/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,12 +35,12 @@ export async function POST(request: Request) {
     });
 
     const responseData = await response.json();
-    // console.log(responseData);
+    console.log(responseData);
 
     if (!response.ok) {
       return Response.json(
         {
-          error: "Erreur lors de la création de l'emission",
+          error: "Erreur lors de la création du participant",
           message: responseData.message,
         },
         { status: response.status }
@@ -47,7 +49,7 @@ export async function POST(request: Request) {
 
     return Response.json(responseData, { status: 201 });
   } catch (e) {
-    console.error("Erreur lors de la création de l'emission:", e);
-    return Response.json("Erreur lors de la création de l'emission", { status: 500 });
+    console.error("Erreur lors de la création du participant:", e);
+    return Response.json("Erreur lors de la création du participant", { status: 500 });
   }
 }

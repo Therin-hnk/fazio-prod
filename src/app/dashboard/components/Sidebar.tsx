@@ -46,8 +46,8 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
       ),
     },
     {
-      label: 'Tournois',
-      href: '/dashboard/tournois',
+      label: 'Participants',
+      href: '/dashboard/participants',
       key: 'emission',
       icon: (isActive: boolean) => (
         <Tv2
@@ -72,7 +72,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   // Initialiser les éléments de navigation au montage
   useEffect(() => {
     initializeNavItems();
-  });
+  }, []);
 
   // Vérifier l'authentification
   useEffect(() => {

@@ -1,94 +1,24 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import EventCard from './EventCard';
-
-interface Event {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  votes: number;
-  youtubeUrl: string;
-  alt: string;
-}
-
-const events: Event[] = [
-  {
-    id: 1,
-    title: 'Talents Latent',
-    description: 'Découvrez les talents cachés de votre région dans ce concours épique !',
-    image: '/images/Gemini_Generated_Image_zdnt48zdnt48zdnt.png',
-    votes: 2400,
-    youtubeUrl: 'https://youtu.be/kdL8qrhyfOQ?si=GimL8KGd5lrCrlms',
-    alt: 'Talents Latent - Émission de découverte de talents',
-  },
-  {
-    id: 2,
-    title: 'Agone Humour',
-    description: "Le meilleur de l'humour africain avec des performances hilarantes.",
-    image: '/images/Gemini_Generated_Image_s078zbs078zbs078.png',
-    votes: 1800,
-    youtubeUrl: 'https://youtu.be/kdL8qrhyfOQ?si=GimL8KGd5lrCrlms',
-    alt: "Agone Humour - Spectacle d'humour",
-  },
-  {
-    id: 3,
-    title: 'Fais moi rire',
-    description: 'Un comedy show interactif où le public vote pour ses favoris.',
-    image: '/images/Gemini_Generated_Image_iyvq97iyvq97iyvq.png',
-    votes: 3200,
-    youtubeUrl: 'https://youtu.be/kdL8qrhyfOQ?si=GimL8KGd5lrCrlms',
-    alt: 'Fais moi rire - Show interactif',
-  },
-  {
-    id: 4,
-    title: 'Chant des Étoiles',
-    description: 'Un concours de chant qui révèle les futures stars.',
-    image: '/images/Gemini_Generated_Image_iyvq97iyvq97iyvq.png',
-    votes: 1500,
-    youtubeUrl: 'https://youtu.be/kdL8qrhyfOQ?si=GimL8KGd5lrCrlms',
-    alt: 'Chant des Étoiles - Concours de chant',
-  },
-  {
-    id: 5,
-    title: 'Danse Passion',
-    description: 'Montrez vos talents de danseur dans cette compétition enflammée.',
-    image: '/images/Gemini_Generated_Image_iyvq97iyvq97iyvq.png',
-    votes: 2700,
-    youtubeUrl: 'https://youtu.be/kdL8qrhyfOQ?si=GimL8KGd5lrCrlms',
-    alt: 'Danse Passion - Compétition de danse',
-  },
-  {
-    id: 6,
-    title: 'Comedy Night',
-    description: 'Une soirée comique avec les meilleurs humoristes.',
-    image: '/images/Gemini_Generated_Image_iyvq97iyvq97iyvq.png',
-    votes: 2000,
-    youtubeUrl: 'https://youtu.be/kdL8qrhyfOQ?si=GimL8KGd5lrCrlms',
-    alt: 'Comedy Night - Soirée comique',
-  },
-  {
-    id: 7,
-    title: 'Star Talent',
-    description: "Les stars de demain s'affrontent dans ce concours unique.",
-    image: '/images/Gemini_Generated_Image_iyvq97iyvq97iyvq.png',
-    votes: 2900,
-    youtubeUrl: 'https://youtu.be/kdL8qrhyfOQ?si=GimL8KGd5lrCrlms',
-    alt: 'Star Talent - Concours de talents',
-  },
-];
+import { Event } from '../dashboard/types/event';
 
 const EventsSection: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
   const itemsPerPage = 6;
 
   // Filtrer les événements en fonction de la recherche
   const filteredEvents = events.filter((event) =>
-    event.title.toLowerCase().includes(searchQuery.toLowerCase())
+    event.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
@@ -96,6 +26,26 @@ const EventsSection: React.FC = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  useEffect(() => {
+    const fetchSlides = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch('/api/public/events');
+        if (!response.ok) throw new Error('Erreur lors du chargement des diapositives');
+        const eventsList: Event[] = await response.json();
+
+        setEvents(eventsList);
+        
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSlides();
+  }, []);
 
   return (
     <section className="relative py-16 pt-20 bg-white overflow-hidden" role="region" aria-label="Liste des événements">

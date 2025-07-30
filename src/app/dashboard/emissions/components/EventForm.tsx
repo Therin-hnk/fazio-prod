@@ -3,6 +3,7 @@
 import { memo, useState, useCallback } from 'react';
 import { Event } from '../../types/event';
 import { Calendar, FileText, CheckCircle, AlertCircle, X, Save, Loader2, Link, MapPin } from 'lucide-react';
+import { GiPriceTag } from 'react-icons/gi';
 
 interface EventFormProps {
   event?: Event;
@@ -16,12 +17,14 @@ interface EventFormProps {
     endDate?: string;
     location?: string;
     status?: string;
+    votePrice?: number;
   }) => Promise<void>;
   onCancel: () => void;
 }
 
 function EventForm({ event, onSubmit, onCancel }: EventFormProps) {
   const [name, setName] = useState(event?.name || '');
+  const [votePrice, setVotePrice] = useState(event?.tournaments[0].votePrice || 0);
   const [description, setDescription] = useState(event?.description || '');
   const [videos, setVideos] = useState<string[]>(
     event?.videos
@@ -149,6 +152,7 @@ function EventForm({ event, onSubmit, onCancel }: EventFormProps) {
         endDate: isoEndDate,
         location: location.trim() || undefined,
         status,
+        votePrice: votePrice || 100,
       });
       setSuccess(event ? 'Événement modifié avec succès' : 'Événement créé avec succès');
       setValidationErrors({});
@@ -252,6 +256,36 @@ function EventForm({ event, onSubmit, onCancel }: EventFormProps) {
               )}
             </div>
             <div className="space-y-2">
+              <label htmlFor="name" className="block text-sm font-semibold text-gray-700">
+                Prix du vote (FCFA)*
+              </label>
+              <div className="relative">
+                <GiPriceTag className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  id="price"
+                  type="number"
+                  value={votePrice || 0}
+                  onChange={(e) => {
+                    setVotePrice(Number(e.target.value));
+                    validateField('votePrice', e.target.value);
+                  }}
+                  className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-red-500 ${
+                    validationErrors.votePrice
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-gray-200 focus:border-red-500 hover:border-red-300'
+                  }`}
+                  placeholder="Prix du vote"
+                  required
+                />
+              </div>
+              {validationErrors.name && (
+                <p id="name-error" className="text-sm text-red-600 flex items-center gap-1">
+                  <AlertCircle className="h-4 w-4" />
+                  {validationErrors.name}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
               <label htmlFor="description" className="block text-sm font-semibold text-gray-700">
                 Description
               </label>
@@ -276,6 +310,7 @@ function EventForm({ event, onSubmit, onCancel }: EventFormProps) {
                     <input
                       type="text"
                       value={video}
+                      name={`video${index}`}
                       onChange={(e) => handleVideoChange(index, e.target.value)}
                       className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-red-500 ${
                         validationErrors.videos

@@ -7,7 +7,7 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useSwipeable } from 'react-swipeable';
 
 interface Slide {
-  id: number;
+  id: string;
   title: string;
   subtitle: string;
   backgroundImage: string;
@@ -226,7 +226,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
               <motion.div className="flex flex-col sm:flex-row gap-4 justify-center items-center" variants={containerVariants}>
                 <motion.div variants={buttonVariants}>
                   <Link
-                    href={`/event/${currentSlideData.id}`}
+                    href={`/emissions/${currentSlideData.id}`}
                     className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white font-semibold text-lg rounded-2xl shadow-2xl hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 backdrop-blur-sm"
                     aria-label={`Voir l'émission ${currentSlideData.title}`}
                   >
@@ -260,10 +260,10 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
                 variants={textVariants}
               >
                 <motion.div className="flex items-center gap-2" variants={textVariants}>
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  {/* <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                  </svg>
-                  <span className="text-sm font-medium">2.4K votes</span>
+                  </svg> */}
+                  {/* <span className="text-sm font-medium">2.4K votes</span> */}
                 </motion.div>
               </motion.div>
             </div>

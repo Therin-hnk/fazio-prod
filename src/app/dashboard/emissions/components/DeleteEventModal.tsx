@@ -6,15 +6,16 @@ import { Trash2, AlertTriangle, X, AlertCircle } from 'lucide-react';
 
 interface DeleteEventModalProps {
   event: Event | null;
+  selectedEventCount?: number; // Optionnel pour compatibilité avec EventsPage
   onConfirm: () => Promise<void>;
   onCancel: () => void;
 }
 
-function DeleteEventModal({ event, onConfirm, onCancel }: DeleteEventModalProps) {
+function DeleteEventModal({ event, selectedEventCount = 0, onConfirm, onCancel }: DeleteEventModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!event) return null;
+  if (!event && selectedEventCount === 0) return null;
 
   const handleConfirm = async () => {
     setIsLoading(true);
@@ -34,7 +35,7 @@ function DeleteEventModal({ event, onConfirm, onCancel }: DeleteEventModalProps)
     }
   };
 
-  const isMultipleEvents = !event.id;
+  const isMultipleEvents = !event?.id || selectedEventCount > 1;
 
   return (
     <div
@@ -79,11 +80,15 @@ function DeleteEventModal({ event, onConfirm, onCancel }: DeleteEventModalProps)
             </div>
             <p id="delete-modal-description" className="text-gray-600 text-sm sm:text-base leading-relaxed">
               {isMultipleEvents ? (
-                'Voulez-vous vraiment supprimer les émissions sélectionnées ?'
+                <>
+                  Voulez-vous vraiment supprimer{' '}
+                  <span className="font-semibold text-gray-900">{selectedEventCount || 'les'}</span> émission(s)
+                  sélectionnée(s) ?
+                </>
               ) : (
                 <>
-                  {`Voulez-vous vraiment supprimer l'émission `}
-                  <span className="font-semibold text-gray-900">{event.name}</span> ?
+                  Voulez-vous vraiment supprimer l'émission{' '}
+                  <span className="font-semibold text-gray-900">{event?.name}</span> ?
                 </>
               )}
             </p>
@@ -112,7 +117,7 @@ function DeleteEventModal({ event, onConfirm, onCancel }: DeleteEventModalProps)
               </>
             ) : (
               <>
-                <Trash2 className="w-4 w-4" />
+                <Trash2 className="w-4 h-4" />
                 <span>Supprimer</span>
               </>
             )}

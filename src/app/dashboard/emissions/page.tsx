@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Event } from '../types/event';
+import { Event, Phase } from '../types/event';
 import EventTable from './components/EventTable';
 import EventFilter from './components/EventFilter';
 import EventForm from './components/EventForm';
 import DeleteEventModal from './components/DeleteEventModal';
+import EventDetailsModal from './components/EventDetailsModal';
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -15,7 +16,8 @@ export default function EventsPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
-  const [showDeleteModal, setShowDeleteModal] = useState<Event | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showDetailsModal, setShowDetailsModal] = useState<Event | null>(null);
   const [selectedEventIds, setSelectedEventIds] = useState<string[]>([]);
   const [filterParams, setFilterParams] = useState<{
     organizerId: string | null;
@@ -35,13 +37,17 @@ export default function EventsPage() {
           headers['x-user-id'] = userId;
         }
         const res = await fetch('/api/admin/events', { headers });
-        if (!res.ok) throw new Error('Erreur lors de la récupération des événements.');
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || 'Erreur lors de la récupération des événements.');
+        }
         const data = await res.json();
+        console.log(data);
         setEvents(data);
         setFilteredEvents(data);
-        setLoading(false);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      } finally {
         setLoading(false);
       }
     };
@@ -82,6 +88,7 @@ export default function EventsPage() {
     endDate?: string;
     location?: string;
     status?: string;
+    votePrice?: number;
   }) => {
     try {
       const headers: Record<string, string> = {
@@ -97,10 +104,11 @@ export default function EventsPage() {
       });
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || "Erreur lors de la création de l'événement.");
+        throw new Error(errorData.message || "Erreur lors de la création de l'événement.");
       }
       const response = await res.json();
-      setEvents([...events, response.event]);
+      window.location.reload(); // Recharger la page pour refléter les changements
+      setEvents([...events, response]);
       handleFilterChange(filterParams.organizerId, filterParams.status, filterParams.search);
       setSuccess('Événement créé avec succès');
       setShowForm(false);
@@ -119,6 +127,7 @@ export default function EventsPage() {
     endDate?: string;
     location?: string;
     status?: string;
+    votePrice?: number;
   }) => {
     if (!editingEvent) return;
     try {
@@ -134,9 +143,13 @@ export default function EventsPage() {
         headers,
         body: JSON.stringify(updatedData),
       });
-      if (!res.ok) throw new Error("Erreur lors de la mise à jour de l'événement.");
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Erreur lors de la mise à jour de l'événement.");
+      }
       const response = await res.json();
-      const updatedEvents = events.map((e) => (e.id === editingEvent.id ? response.event : e));
+      const updatedEvents = events.map((e) => (e.id === editingEvent.id ? response : e));
+      window.location.reload(); // Recharger la page pour refléter les changements
       setEvents(updatedEvents);
       handleFilterChange(filterParams.organizerId, filterParams.status, filterParams.search);
       setSuccess('Événement mis à jour avec succès');
@@ -148,7 +161,7 @@ export default function EventsPage() {
   };
 
   const handleDeleteSelected = async () => {
-    const idsToDelete = [...selectedEventIds];
+    if (selectedEventIds.length === 0) return;
     try {
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -159,15 +172,84 @@ export default function EventsPage() {
       const res = await fetch('/api/admin/events/delete', {
         method: 'DELETE',
         headers,
-        body: JSON.stringify({ ids: idsToDelete }),
+        body: JSON.stringify({ ids: selectedEventIds }),
       });
-      if (!res.ok) throw new Error('Erreur lors de la suppression des événements.');
-      const updatedEvents = events.filter((e) => !idsToDelete.includes(e.id));
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Erreur lors de la suppression des événements.');
+      }
+      const updatedEvents = events.filter((e) => !selectedEventIds.includes(e.id));
       setEvents(updatedEvents);
       handleFilterChange(filterParams.organizerId, filterParams.status, filterParams.search);
       setSuccess('Événement(s) supprimé(s) avec succès');
-      setShowDeleteModal(null);
+      setShowDeleteModal(false);
       setSelectedEventIds([]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+    }
+  };
+
+  const handleViewDetails = (event: Event) => {
+    setShowDetailsModal(event);
+  };
+
+  const handleAddPhase = async (tournamentId: string, phase: any) => {
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      if (userId) {
+        headers['x-user-id'] = userId;
+      }
+      const res = await fetch('/api/admin/phases/create', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ tournamentId, ...phase }),
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Erreur lors de l’ajout de la phase.');
+      }
+      // Recharger les événements pour inclure la nouvelle phase
+      const loadEvents = async () => {
+        const res = await fetch('/api/admin/events', { headers });
+        if (!res.ok) throw new Error('Erreur lors de la récupération des événements.');
+        const data = await res.json();
+        setEvents(data);
+        handleFilterChange(filterParams.organizerId, filterParams.status, filterParams.search);
+      };
+      await loadEvents();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+    }
+  };
+
+  const handleAddParticipantToPhase = async (phaseId: string, userId: string) => {
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      if (userId) {
+        headers['x-user-id'] = userId;
+      }
+      const res = await fetch('/api/admin/phase-participants/add', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ phaseId, userId }),
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Erreur lors de l’association du participant.');
+      }
+      // Recharger les événements pour inclure le nouveau participant
+      const loadEvents = async () => {
+        const res = await fetch('/api/admin/events', { headers });
+        if (!res.ok) throw new Error('Erreur lors de la récupération des événements.');
+        const data = await res.json();
+        setEvents(data);
+        handleFilterChange(filterParams.organizerId, filterParams.status, filterParams.search);
+      };
+      await loadEvents();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     }
@@ -200,6 +282,7 @@ export default function EventsPage() {
             setShowForm(true);
           }}
           className="flex items-center gap-2 px-5 py-2 bg-red-600 text-white rounded-full shadow hover:bg-red-700 transition"
+          aria-label="Ajouter une émission"
         >
           <svg width="20" height="20" fill="none">
             <path d="M10 5v10M5 10h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -234,8 +317,9 @@ export default function EventsPage() {
       {selectedEventIds.length > 0 && (
         <div className="sticky top-0 z-10 flex justify-end mb-4">
           <button
-            onClick={() => setShowDeleteModal({} as Event)}
+            onClick={() => setShowDeleteModal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition"
+            aria-label={`Supprimer ${selectedEventIds.length} événement(s)`}
           >
             <svg width="18" height="18" fill="none">
               <path
@@ -252,21 +336,20 @@ export default function EventsPage() {
 
       <div className="bg-white rounded-xl shadow-lg p-6">
         <EventFilter onFilterChange={handleFilterChange} />
-        {loading ? (
-          <div className="flex justify-center items-center h-40">
-            <span className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600"></span>
-          </div>
-        ) : (
-          <EventTable
-            events={filteredEvents}
-            onEdit={(event) => {
-              setEditingEvent(event);
-              setShowForm(true);
-            }}
-            onDelete={setShowDeleteModal}
-            onSelectEvents={handleSelectEvents}
-          />
-        )}
+        <EventTable
+          events={filteredEvents}
+          onEdit={(event) => {
+            setEditingEvent(event);
+            setShowForm(true);
+          }}
+          onDelete={(event) => {
+            setSelectedEventIds([event.id]);
+            setShowDeleteModal(true);
+          }}
+          onViewDetails={handleViewDetails}
+          onSelectEvents={handleSelectEvents}
+          isLoading={loading}
+        />
       </div>
 
       {showForm && (
@@ -285,14 +368,27 @@ export default function EventsPage() {
         </div>
       )}
 
-      <DeleteEventModal
-        event={showDeleteModal}
-        onConfirm={handleDeleteSelected}
-        onCancel={() => {
-          setShowDeleteModal(null);
-          setSelectedEventIds([]);
-        }}
-      />
+      {showDeleteModal && (
+        <DeleteEventModal
+          event={null}
+          selectedEventCount={selectedEventIds.length}
+          onConfirm={handleDeleteSelected}
+          onCancel={() => {
+            setShowDeleteModal(false);
+            setSelectedEventIds([]);
+          }}
+        />
+      )}
+
+      {showDetailsModal && (
+        <EventDetailsModal
+          event={showDetailsModal}
+          onClose={() => setShowDetailsModal(null)}
+          onAddPhase={handleAddPhase}
+          onAddParticipantToPhase={handleAddParticipantToPhase}
+        />
+      )}
+
       <style jsx global>{`
         @keyframes fade-in {
           from {
