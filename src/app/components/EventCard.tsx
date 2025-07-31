@@ -56,25 +56,25 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             {event.description}
           </p>
 
-          {/* Lien Voir Plus */}
-          <a
-            href={`/emissions/${event.id}`}
-            className="text-orange-500 hover:text-orange-600 font-medium text-sm mb-3 transition-colors duration-300 flex items-center gap-1"
-          >
-            <Eye className="w-4 h-4" />
-            Voir Plus
-          </a>
-
           {/* Bouton Voir les vidéos */}
           {event.videos?.length > 0 && (
             <button
               onClick={() => setShowVideos(true)}
-              className="mt-2 flex items-center gap-1 text-sm text-white bg-orange-500 hover:bg-orange-600 transition-colors px-4 py-2 rounded-lg shadow"
+              className="text-orange-500 hover:text-orange-600 font-medium text-sm mb-3 transition-colors duration-300 flex items-center gap-1"
             >
               <PlayCircle className="w-4 h-4" />
               Voir les Vidéos
             </button>
           )}
+
+          {/* Lien Voir Plus */}
+          <a
+            href={`/emissions/${event.id}`}
+            className="mt-2 flex items-center gap-1 text-sm text-white bg-orange-500 hover:bg-orange-600 transition-colors px-4 py-2 rounded-lg shadow"
+          >
+            <Eye className="w-4 h-4" />
+            Voir Plus
+          </a>
         </div>
 
         {/* OVERLAY VIDEOS */}
