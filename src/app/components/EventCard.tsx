@@ -70,7 +70,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           {/* Lien Voir Plus */}
           <a
             href={`/emissions/${event.id}`}
-            className="mt-2 flex items-center gap-1 text-sm text-white bg-orange-500 hover:bg-orange-600 transition-colors px-4 py-2 rounded-lg shadow"
+            className="mt-2 inline-flex items-center gap-1 text-sm text-white bg-orange-500 hover:bg-orange-600 transition-colors px-4 py-2 rounded-lg shadow"
           >
             <Eye className="w-4 h-4" />
             Voir Plus
