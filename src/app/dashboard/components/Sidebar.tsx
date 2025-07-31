@@ -114,14 +114,14 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   // Si aucun rôle ou rôle non reconnu, afficher un message
   if (!role || !roleNavItems[role]) {
     return (
-      <div className="w-56 bg-white h-full fixed left-0 top-16 h-[calc(100vh-4rem)] lg:relative lg:top-0 lg:h-full flex items-center justify-center">
+      <div className="w-56 bg-white fixed left-0 top-16 h-[calc(100vh-4rem)] lg:relative lg:top-0 lg:h-full flex items-center justify-center">
         <p className="text-gray-600 text-sm text-center">Accès non autorisé. Veuillez vous reconnecter.</p>
       </div>
     );
   }
 
   return (
-    <div className="w-56 bg-white flex flex-col h-full fixed left-0 top-16 h-[calc(100vh-4rem)] md:h-full lg:relative lg:top-0 lg:h-full lg:pt-0">
+    <div className="w-56 bg-white flex flex-col fixed left-0 top-16 h-[calc(100vh-4rem)] md:h-full lg:relative lg:top-0 lg:h-full lg:pt-0">
       {/* Bouton de fermeture pour mobile */}
       <div className="lg:hidden flex justify-end p-4">
         <button

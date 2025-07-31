@@ -132,7 +132,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
         {/* Liens internes masqués pour SEO */}
         <a className="sr-only" href="/">Accueil</a>
-        <a className="sr-only" href="/#evenements">Nos Événements</a>
+        <a className="sr-only" href="/#events">Nos Événements</a>
         <a className="sr-only" href="/vote">Voter</a>
         <a className="sr-only" href="/contact">Contactez-nous</a>
         <a className="sr-only" href="/mentions-legales">Mentions Légales</a>

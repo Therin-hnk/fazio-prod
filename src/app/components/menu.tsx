@@ -13,7 +13,7 @@ const MenuBare = () => {
 
   const menuItems = [
     { icon: Home, label: 'Accueil', href: '/', active: true },
-    { icon: Search, label: 'Événements', href: '/events' },
+    { icon: Search, label: 'Événements', href: '/#events' },
     { icon: Trophy, label: 'Espace Nominé', href: '/nominee' },
     { icon: Users, label: 'À propos', href: '/about' },
     { icon: Phone, label: 'Contact', href: '/contact' },

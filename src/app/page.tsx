@@ -3,13 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Loader2 } from 'lucide-react';
-import SearchBar from './components/SearchBar';
 import CarouselSlide from './components/CarouselSlide';
 import MenuBare from './components/menu';
 import EventsSection from './components/EventsSection';
-import SponsorsPartnersSection from './components/SponsorsPartnersSection';
 import WebsiteStatsSection from './components/WebsiteStatsSection';
-import NewsSection from './components/NewsSection';
 import driveImageLoader from './lib/driveImageLoader';
 
 interface Slide {

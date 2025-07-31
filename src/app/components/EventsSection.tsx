@@ -48,7 +48,7 @@ const EventsSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="relative py-16 pt-20 bg-white overflow-hidden" role="region" aria-label="Liste des événements">
+    <section id='events' className="relative py-16 pt-20 bg-white overflow-hidden" role="region" aria-label="Liste des événements">
       {/* Background Wave */}
       <div className="absolute top-0 w-full mt-[-30px] inset-0 opacity-1 dark:opacity-40">
         <svg className="top-0" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
