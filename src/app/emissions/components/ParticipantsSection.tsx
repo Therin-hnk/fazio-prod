@@ -134,4 +134,4 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
   );
 };
 
-export default ParticipantsSection;
+export default ParticipantsSection; 
