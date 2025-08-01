@@ -78,16 +78,17 @@ const EventComponent: React.FC<EventComponentProps> = ({
 }) => {
   const [selectedTournamentId, setSelectedTournamentId] = useState<string | null>(null);
 
-  if (!emissionData) {
-    return <div className="bg-white min-h-screen">Chargement ou aucune donnée disponible...</div>;
-  }
-
-  // Sélectionner le premier tournoi par défaut si aucun n'est sélectionné
+  // Déplacer la logique de sélection du tournoi par défaut dans useEffect
   useEffect(() => {
-    if (!selectedTournamentId && emissionData.tournaments.length > 0) {
+    if (emissionData && !selectedTournamentId && emissionData.tournaments.length > 0) {
       setSelectedTournamentId(emissionData.tournaments[0].id);
     }
   }, [emissionData, selectedTournamentId]);
+
+
+  if (!emissionData) {
+    return <div className="bg-white min-h-screen">Chargement ou aucune donnée disponible...</div>;
+  }
 
   // Trouver le tournoi sélectionné
   const selectedTournament = emissionData.tournaments.find(t => t.id === selectedTournamentId);

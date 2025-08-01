@@ -34,8 +34,8 @@ function PhaseForm({ phase, events, tournaments, onSubmit, onCancel }: PhaseForm
 
   const [name, setName] = useState(phase?.name || '');
   const [description, setDescription] = useState(phase?.description || '');
-  const [startDate, setStartDate] = useState(formatDateForInput(phase!.startDate));
-  const [endDate, setEndDate] = useState(formatDateForInput(phase!.endDate));
+  const [startDate, setStartDate] = useState(formatDateForInput(phase?.startDate || ''));
+  const [endDate, setEndDate] = useState(formatDateForInput(phase?.endDate || ''));
   const [eventId, setEventId] = useState(phase?.tournament?.eventId || '');
   const [tournamentId, setTournamentId] = useState(phase?.tournamentId || '');
   const [participantIds, setParticipantIds] = useState<string[]>(phase?.participants?.map(p => p.id) || []);
@@ -240,22 +240,6 @@ function PhaseForm({ phase, events, tournaments, onSubmit, onCancel }: PhaseForm
                   {validationErrors.name}
                 </p>
               )}
-            </div>
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="description" className="block text-sm font-semibold text-gray-700">
-              Description
-            </label>
-            <div className="relative">
-              <FileText className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-              <textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 hover:border-red-300 transition-all duration-200"
-                placeholder="Description de la phase"
-                rows={4}
-              />
             </div>
           </div>
           <div className="space-y-2">

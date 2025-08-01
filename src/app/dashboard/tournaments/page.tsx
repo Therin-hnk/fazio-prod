@@ -103,6 +103,7 @@ export default function CategoriesPage() {
       handleFilterChange(filterParams.eventId, filterParams.search);
       setSuccess('Catégorie créée avec succès');
       setShowForm(false);
+      window.location.reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     }
@@ -142,6 +143,7 @@ export default function CategoriesPage() {
       setSuccess('Catégorie mise à jour avec succès');
       setEditingTournament(null);
       setShowForm(false);
+      window.location.reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     }
@@ -171,6 +173,7 @@ export default function CategoriesPage() {
       setSuccess('Catégorie(s) supprimée(s) avec succès');
       setShowDeleteModal(false);
       setSelectedTournamentIds([]);
+      window.location.reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     }

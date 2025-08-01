@@ -128,6 +128,7 @@ export default function PhasesPage() {
       handleFilterChange(filterParams.eventId, filterParams.tournamentId, filterParams.search);
       setSuccess('Phase créée avec succès');
       setShowForm(false);
+      window.location.reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     }
@@ -166,6 +167,7 @@ export default function PhasesPage() {
       setSuccess('Phase mise à jour avec succès');
       setEditingPhase(null);
       setShowForm(false);
+      window.location.reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     }
