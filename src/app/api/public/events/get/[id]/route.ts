@@ -17,6 +17,7 @@ export async function GET(
         "Content-Type": "application/json",
         "Authorization": `Bearer ${NEXT_PUBLIC_API_KEY}`,
       },
+      cache: "no-store"
     });
 
     // console.log(response.status, response.statusText);

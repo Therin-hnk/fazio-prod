@@ -16,6 +16,7 @@ export async function POST(request: Request) {
         "Authorization": `Bearer ${NEXT_PUBLIC_API_KEY}`,
       },
       body: JSON.stringify(body),
+      cache: "no-store"
     });
 
     const responseData = await response.json();
