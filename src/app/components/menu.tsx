@@ -14,9 +14,9 @@ const MenuBare = () => {
   const menuItems = [
     { icon: Home, label: 'Accueil', href: '/', active: true },
     { icon: Search, label: 'Événements', href: '/#events' },
-    { icon: Trophy, label: 'Espace Nominé', href: '/nominee' },
-    { icon: Users, label: 'À propos', href: '/about' },
-    { icon: Phone, label: 'Contact', href: '/contact' },
+    // { icon: Trophy, label: 'Espace Nominé', href: '/nominee' },
+    // { icon: Users, label: 'À propos', href: '/about' },
+    // { icon: Phone, label: 'Contact', href: '/contact' },
   ];
 
   return (
@@ -73,16 +73,16 @@ const MenuBare = () => {
 
           {/* CTA Button Desktop/Tablet */}
           <div className="hidden md:flex items-center">
-            <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 lg:px-6 py-2 rounded-lg text-sm lg:text-base font-medium transition-colors duration-200 shadow-md hover:shadow-lg">
-              Voter
-            </button>
+            <a href='/dashboard/login' className="bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 lg:px-6 py-2 rounded-lg text-sm lg:text-base font-medium transition-colors duration-200 shadow-md hover:shadow-lg">
+              Espace administrateur
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-2">
-            <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200">
-              Voter
-            </button>
+            <a href='/dashboard/login' className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200">
+              Espace administrateur
+            </a>
             <button
               onClick={toggleMenu}
               className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200"
