@@ -39,23 +39,25 @@ export interface Phase {
   description: string | null;
   startDate: string | null;
   endDate: string | null;
-  type: string;
   tournamentId: string;
   participants: Participant[];
+  tournament: Tournament | null;
   votes: Vote[];
+  order: number;
 }
 
 export interface Tournament {
   id: string;
   name: string;
   eventId: string;
-  votePrice: number;
   description: string | null;
   image: string | null;
+  logoUrl: string | null;
   startDate: string | null;
   endDate: string | null;
   location: string | null;
   phases: Phase[];
+  event: Event | null;
 }
 
 export interface Event {
@@ -77,4 +79,5 @@ export interface Event {
   news: any[]; // Non utilisé pour le moment
   videos: EventVideo[];
   totalVotes: number | 0;
+  votePrice: number;
 }

@@ -24,7 +24,7 @@ interface EventFormProps {
 
 function EventForm({ event, onSubmit, onCancel }: EventFormProps) {
   const [name, setName] = useState(event?.name || '');
-  const [votePrice, setVotePrice] = useState(event?.tournaments[0].votePrice || 0);
+  const [votePrice, setVotePrice] = useState(event?.votePrice || 0);
   const [description, setDescription] = useState(event?.description || '');
   const [videos, setVideos] = useState<string[]>(
     event?.videos

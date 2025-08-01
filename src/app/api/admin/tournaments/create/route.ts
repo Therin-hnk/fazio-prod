@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Token non fourni" }, { status: 401 });
     }
 
-     const response = await fetch(`${API_URL}/admin/${userId}/phases/create`, {
+     const response = await fetch(`${API_URL}/admin/${userId}/tournaments/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

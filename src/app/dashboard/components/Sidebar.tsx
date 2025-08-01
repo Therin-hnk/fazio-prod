@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { FiX } from 'react-icons/fi';
-import { LayoutDashboard, LucideTicketPercent, TicketCheck, Ticket, LucideUsers, BookUserIcon, LucideShoppingCart, BookTemplateIcon, Tv2 } from 'lucide-react';
+import { LayoutDashboard, LucideTicketPercent, TicketCheck, Ticket, LucideUsers, BookUserIcon, LucideShoppingCart, BookTemplateIcon, Tv2, Group, LucideUserPlus2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
 import Cookies from 'js-cookie';
@@ -16,7 +16,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
 
   // Tableau de correspondance des rôles et menus
   const roleNavItems: Record<string, string[]> = {
-    ADMINISTRATOR: ['dashboard', 'emission'],
+    ADMINISTRATOR: ['dashboard', 'emission', 'tournament', 'participant', 'phase'],
   };
 
   // Liste complète des éléments de navigation
@@ -46,11 +46,35 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
       ),
     },
     {
+      label: 'Gestion des catégories',
+      href: '/dashboard/tournaments',
+      key: 'tournament',
+      icon: (isActive: boolean) => (
+        <Group
+          className={isActive ? 'text-[#1E3A8A]' : 'text-gray-600'}
+          size={20}
+          aria-hidden="true"
+        />
+      ),
+    },
+    {
+      label: 'Gestion des Phases',
+      href: '/dashboard/phases',
+      key: 'phase',
+      icon: (isActive: boolean) => (
+        <Group
+          className={isActive ? 'text-[#1E3A8A]' : 'text-gray-600'}
+          size={20}
+          aria-hidden="true"
+        />
+      ),
+    },
+    {
       label: 'Participants',
       href: '/dashboard/participants',
-      key: 'emission',
+      key: 'participant',
       icon: (isActive: boolean) => (
-        <Tv2
+        <LucideUserPlus2
           className={isActive ? 'text-[#1E3A8A]' : 'text-gray-600'}
           size={20}
           aria-hidden="true"
