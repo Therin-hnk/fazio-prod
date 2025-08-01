@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import PhasesTournoi from './PhasesTournoi';
 import ParticipantsSection from './ParticipantsSection';
-import { Event, Phase } from '@/app/dashboard/types/event';
+import { Event, Phase, Tournament } from '@/app/dashboard/types/event';
 import driveImageLoader from '@/app/lib/driveImageLoader';
 import { toZonedTime } from 'date-fns-tz';
 
@@ -76,9 +76,21 @@ const EventComponent: React.FC<EventComponentProps> = ({
   emissionData,
   currentPhase
 }) => {
+  const [selectedTournamentId, setSelectedTournamentId] = useState<string | null>(null);
+
   if (!emissionData) {
     return <div className="bg-white min-h-screen">Chargement ou aucune donnée disponible...</div>;
   }
+
+  // Sélectionner le premier tournoi par défaut si aucun n'est sélectionné
+  useEffect(() => {
+    if (!selectedTournamentId && emissionData.tournaments.length > 0) {
+      setSelectedTournamentId(emissionData.tournaments[0].id);
+    }
+  }, [emissionData, selectedTournamentId]);
+
+  // Trouver le tournoi sélectionné
+  const selectedTournament = emissionData.tournaments.find(t => t.id === selectedTournamentId);
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden pt-0">
@@ -111,16 +123,44 @@ const EventComponent: React.FC<EventComponentProps> = ({
       </div>
 
       <div className="relative z-20 px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        <PhasesTournoi
-          currentPhaseId={currentPhase?.id}
-          phases={emissionData.tournaments.flatMap(t => t.phases)}
-        />
-        <div className="mt-10" />
-        <ParticipantsSection
-          currentPhase={currentPhase}
-          participants={currentPhase!.participants}
-          tournament={emissionData.tournaments[0]}
-        />
+        {/* Menu des tournois */}
+        <div className="mb-8 overflow-x-auto">
+          <div className="flex gap-4 min-w-max">
+            {emissionData.tournaments.map(tournament => (
+              <button
+                key={tournament.id}
+                onClick={() => setSelectedTournamentId(tournament.id)}
+                className={`
+                  px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                  ${selectedTournamentId === tournament.id
+                    ? 'bg-blue-900 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
+                `}
+                aria-current={selectedTournamentId === tournament.id ? 'true' : 'false'}
+              >
+                {tournament.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Affichage des phases et participants du tournoi sélectionné */}
+        {selectedTournament ? (
+          <>
+            <PhasesTournoi
+              currentPhaseId={currentPhase?.id}
+              phases={selectedTournament.phases}
+            />
+            <ParticipantsSection
+              emissionData={{
+                ...emissionData,
+                tournaments: [selectedTournament] // Passer uniquement le tournoi sélectionné
+              }}
+            />
+          </>
+        ) : (
+          <p className="text-gray-600 text-sm">Aucun tournoi sélectionné.</p>
+        )}
       </div>
     </div>
   );
