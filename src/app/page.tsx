@@ -37,7 +37,7 @@ const HomePage: React.FC = () => {
         const response = await fetch('/api/public/events/ongoing/3');
         if (!response.ok) throw new Error('Erreur lors du chargement des diapositives');
         const rawSlides: RawSlide[] = await response.json();
-        
+
         // Transformer les données brutes en objets Slide
         const formattedSlides: Slide[] = rawSlides.map((rawSlide, index) => ({
           id: rawSlide.id, // Générer un ID numérique à partir de l'index
