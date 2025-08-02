@@ -89,6 +89,7 @@ const HomePage: React.FC = () => {
       </section>
       <EventsSection />
       {/* <SponsorsPartnersSection /> */}
+      <div className='pb-20'></div>
       <WebsiteStatsSection />
       {/* <NewsSection /> */}
     </div>
