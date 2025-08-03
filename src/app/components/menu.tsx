@@ -25,12 +25,14 @@ const MenuBare = () => {
         <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0">
-            <Image
-                src="/logo/logo2.png"
-                width={20} height={20}
-                alt='' className='w-[70px] h-[70px] object-contain'
-                unoptimized
-            />
+            <a href='/'>
+              <Image
+                  src="/logo/logo2.png"
+                  width={20} height={20}
+                  alt='' className='w-[70px] h-[70px] object-contain'
+                  unoptimized
+              />
+            </a>
           </div>
 
           {/* Desktop Menu */}
