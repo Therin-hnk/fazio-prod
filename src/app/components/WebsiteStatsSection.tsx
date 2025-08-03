@@ -254,9 +254,9 @@ const WebsiteStatsSection: React.FC = () => {
           <div className="flex items-center justify-center mb-3">
             <BarChart3 className="w-6 h-6 text-orange-500 mr-2" />
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-              Statistiques du Site
+              Nos chiffres
             </h2>
-            <div className="flex items-center ml-3">
+            {/* <div className="flex items-center ml-3">
               <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-green-500' : 'bg-gray-400'} mr-2 transition-colors duration-500`}>
                 {isLive && (
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-ping" />
@@ -265,7 +265,7 @@ const WebsiteStatsSection: React.FC = () => {
               <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
                 {isLive ? 'EN DIRECT' : 'HORS LIGNE'}
               </span>
-            </div>
+            </div> */}
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Découvrez les performances de notre site web en temps réel
