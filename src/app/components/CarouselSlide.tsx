@@ -158,7 +158,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
               src={currentSlideData.backgroundImage}
               alt={currentSlideData.alt}
               fill
-              className="object-cover"
+              className="object-cover object-left-top"
               quality={90}
               priority={currentSlide === 0}
               loading={currentSlide === 0 ? undefined : 'lazy'}
@@ -204,7 +204,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
 
               {/* Titre avec effet moderne */}
               <motion.h1
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-6 text-white leading-tight"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 text-white leading-tight"
                 variants={textVariants}
               >
                 <span className="bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent drop-shadow-2xl">
@@ -215,7 +215,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
               {/* Sous-titre */}
               {currentSlideData.subtitle && (
                 <motion.p
-                  className="text-lg sm:text-xl md:text-2xl mb-8 text-gray-300 font-light max-w-3xl mx-auto leading-relaxed"
+                  className="text-lg sm:text-lg md:text-xl mb-8 text-gray-300 font-light max-w-3xl mx-auto leading-relaxed"
                   variants={textVariants}
                 >
                   {currentSlideData.subtitle}
