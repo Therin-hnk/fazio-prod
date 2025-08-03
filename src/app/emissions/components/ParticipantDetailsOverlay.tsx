@@ -95,7 +95,7 @@ const ParticipantDetailsOverlay: React.FC<ParticipantDetailsOverlayProps> = ({
             {participant.firstName} {participant.lastName}
           </h3>
           <p className="text-gray-600 text-sm p-6 pt-3">
-            {participant.description || 'Aucune description disponible'}
+            {participant.description}
           </p>
           {participant.videos && participant.videos.length > 0 && (
             <div className='p-6'>
