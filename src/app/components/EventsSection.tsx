@@ -76,7 +76,7 @@ const EventsSection: React.FC = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <div className="flex items-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-2 border-gray-200 dark:border-gray-600 rounded-2xl overflow-hidden transition-all duration-300">
+          <div className="flex items-center bg-white dark:bg-gray-800/80 backdrop-blur-sm border-2 border-gray-200 dark:border-gray-600 rounded-2xl overflow-hidden transition-all duration-300">
             <Search className="w-6 h-6 mx-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
