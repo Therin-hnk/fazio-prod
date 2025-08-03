@@ -5,6 +5,7 @@ import ParticipantCard from './ParticipantCard';
 import ParticipantDetailsOverlay from './ParticipantDetailsOverlay';
 import { Event, Participant, Tournament } from '@/app/dashboard/types/event';
 import driveImageLoader from '@/app/lib/driveImageLoader';
+import { Search } from 'lucide-react';
 
 interface ParticipantsSectionProps {
   emissionData: Event;
@@ -17,6 +18,7 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showLearnMoreOverlay, setShowLearnMoreOverlay] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   console.log("emission data fetched", emissionData);
 
@@ -118,13 +120,16 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
     .flatMap(tournament => tournament.phases.flatMap(phase => phase.participants))
     .find(participant => participant.id === showLearnMoreOverlay);
 
-  // Extraire les participants uniques par tournoi
+  // Extraire les participants uniques par tournoi avec filtrage par recherche
   const getTournamentParticipants = (tournament: Tournament): Participant[] => {
     const participantMap = new Map<string, Participant>();
     tournament.phases.forEach(phase => {
       phase.participants.forEach(participant => {
         if (!participantMap.has(participant.id)) {
-          participantMap.set(participant.id, participant);
+          const fullName = `${participant.firstName} ${participant.lastName}`.toLowerCase();
+          if (!searchQuery || fullName.includes(searchQuery.toLowerCase())) {
+            participantMap.set(participant.id, participant);
+          }
         }
       });
     });
@@ -166,32 +171,52 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
       )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        {emissionData?.tournaments.map(tournament => (
-          <div key={tournament.id} className="mb-12">
-            {tournament.phases.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {getTournamentParticipants(tournament).map(participant => (
-                  <ParticipantCard
-                    key={participant.id}
-                    id={participant.id}
-                    name={`${participant.firstName} ${participant.lastName}`}
-                    description={participant.description || 'Aucune description disponible'}
-                    image={driveImageLoader({ src: participant.avatarUrl || "" })}
-                    votePrice={emissionData.votePrice || 0}
-                    totalVotes={participant.totalVotes || 0}
-                    phaseId={getActivePhaseId(tournament)}
-                    tournamentId={tournament.id}
-                    youtubeLinks={participant.videos?.map(video => video.url) || []}
-                    onVote={handleVote}
-                    onLearnMore={handleLearnMore}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-600 text-sm">Aucune phase disponible pour ce tournoi.</p>
-            )}
+        {/* Barre de recherche */}
+        <div className="mb-8">
+          <div className="relative max-w-md mx-auto">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Rechercher un participant..."
+              className="w-full py-3 pl-10 pr-4 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+              aria-label="Rechercher un participant par nom"
+            />
+            <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
           </div>
-        ))}
+        </div>
+
+        {emissionData?.tournaments.map(tournament => {
+          const participants = getTournamentParticipants(tournament);
+          return (
+            <div key={tournament.id} className="mb-12">
+              {tournament.phases.length > 0 && participants.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {participants.map(participant => (
+                    <ParticipantCard
+                      key={participant.id}
+                      id={participant.id}
+                      name={`${participant.firstName} ${participant.lastName}`}
+                      description={participant.description || 'Aucune description disponible'}
+                      image={driveImageLoader({ src: participant.avatarUrl || "" })}
+                      votePrice={emissionData.votePrice || 0}
+                      totalVotes={participant.totalVotes || 0}
+                      phaseId={getActivePhaseId(tournament)}
+                      tournamentId={tournament.id}
+                      youtubeLinks={participant.videos?.map(video => video.url) || []}
+                      onVote={handleVote}
+                      onLearnMore={handleLearnMore}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-600 text-sm text-center">
+                  {searchQuery ? 'Aucun participant trouvé pour cette recherche.' : 'Aucune phase disponible pour ce tournoi.'}
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
