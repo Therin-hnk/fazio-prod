@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import EventComponent from '../components/EventComponent';
 import { useEffect, useState } from 'react';
 import { Event, Phase } from '@/app/dashboard/types/event';
@@ -8,7 +8,10 @@ import { toZonedTime } from 'date-fns-tz';
 
 export default function EmissionPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const emissionID = typeof params.emissionID === 'string' ? params.emissionID : '';
+  const p_id = searchParams.get('p_id') || undefined;
+  const t_id = searchParams.get('t_id') || undefined;
 
   const [emissionData, setEmissionData] = useState<Event | null>(null);
   const [currentPhase, setCurrentPhase] = useState<Phase | null>(null);
@@ -66,7 +69,9 @@ export default function EmissionPage() {
         targetDate={currentPhase?.endDate ? toZonedTime(new Date(currentPhase.endDate), 'Africa/Lagos') : undefined}
         emissionData={emissionData}
         currentPhase={currentPhase}
+        currentParticipantId={p_id}
+        currentTournamentId={t_id}
       />
     </div>
   );
-} 
+}

@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import ParticipantCard from './ParticipantCard';
+import ParticipantDetailsOverlay from './ParticipantDetailsOverlay';
 import { Event, Participant, Tournament } from '@/app/dashboard/types/event';
 import driveImageLoader from '@/app/lib/driveImageLoader';
 
 interface ParticipantsSectionProps {
   emissionData: Event;
+  currentParticipantId?: string;
 }
 
 const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
   emissionData,
+  currentParticipantId,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [showLearnMoreOverlay, setShowLearnMoreOverlay] = useState<string | null>(null);
 
-  console.log("emiison data fetched", emissionData);
+  console.log("emission data fetched", emissionData);
 
-  // Fonction pour gérer le vote (inchangée)
+  // Fonction pour gérer le vote
   const getHeaders = (): Record<string, string> => {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -87,6 +93,31 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
     }
   };
 
+  // Fonction pour gérer l'affichage des détails du participant
+  const handleLearnMore = (participantId: string) => {
+    setShowLearnMoreOverlay(participantId);
+  };
+
+  // Détection du paramètre currentParticipantId au chargement
+  useEffect(() => {
+    if (currentParticipantId && !showLearnMoreOverlay) {
+      // Vérifier si l'ID du participant existe dans emissionData
+      const participantExists = emissionData.tournaments
+        .flatMap(tournament => tournament.phases.flatMap(phase => phase.participants))
+        .some(participant => participant.id === currentParticipantId);
+      if (participantExists) {
+        handleLearnMore(currentParticipantId);
+      } else {
+        console.warn(`Participant avec l'ID ${currentParticipantId} non trouvé.`);
+      }
+    }
+  }, [currentParticipantId, emissionData]);
+
+  // Trouver le participant sélectionné pour l'overlay
+  const selectedParticipant = emissionData.tournaments
+    .flatMap(tournament => tournament.phases.flatMap(phase => phase.participants))
+    .find(participant => participant.id === showLearnMoreOverlay);
+
   // Extraire les participants uniques par tournoi
   const getTournamentParticipants = (tournament: Tournament): Participant[] => {
     const participantMap = new Map<string, Participant>();
@@ -117,10 +148,23 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
     <div className="relative">
       {/* Loader */}
       {isLoading && (
-        <div className="fixed w-full h-full inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[100000]">
+        <div className="fixed w-full h-full inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[100000000000]">
           <div className="w-16 h-16 border-4 border-t-4 border-t-blue-500 border-gray-200 rounded-full animate-spin"></div>
         </div>
       )}
+
+      {/* Overlay des détails du participant */}
+      {showLearnMoreOverlay && selectedParticipant && (
+        <ParticipantDetailsOverlay
+          participant={selectedParticipant}
+          votePrice={emissionData.votePrice || 0}
+          tournamentId={emissionData.tournaments.find(t => t.phases.some(p => p.participants.some(p => p.id === selectedParticipant.id)))?.id}
+          phaseId={getActivePhaseId(emissionData.tournaments.find(t => t.phases.some(p => p.participants.some(p => p.id === selectedParticipant.id)))!)}
+          onVote={handleVote}
+          onClose={() => setShowLearnMoreOverlay(null)}
+        />
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         {emissionData?.tournaments.map(tournament => (
           <div key={tournament.id} className="mb-12">
@@ -139,6 +183,7 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
                     tournamentId={tournament.id}
                     youtubeLinks={participant.videos?.map(video => video.url) || []}
                     onVote={handleVote}
+                    onLearnMore={handleLearnMore}
                   />
                 ))}
               </div>

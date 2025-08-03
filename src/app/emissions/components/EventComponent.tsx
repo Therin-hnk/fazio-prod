@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import PhasesTournoi from './PhasesTournoi';
@@ -69,22 +71,29 @@ interface EventComponentProps {
   targetDate?: Date;
   emissionData?: Event;
   currentPhase?: Phase | null;
+  currentParticipantId?: string;
+  currentTournamentId?: string;
 }
 
 const EventComponent: React.FC<EventComponentProps> = ({ 
   targetDate, 
   emissionData,
-  currentPhase
+  currentPhase,
+  currentParticipantId,
+  currentTournamentId
 }) => {
   const [selectedTournamentId, setSelectedTournamentId] = useState<string | null>(null);
 
   // Déplacer la logique de sélection du tournoi par défaut dans useEffect
   useEffect(() => {
     if (emissionData && !selectedTournamentId && emissionData.tournaments.length > 0) {
-      setSelectedTournamentId(emissionData.tournaments[0].id);
+      // Si currentTournamentId est fourni et valide, le sélectionner
+      const defaultTournamentId = currentTournamentId && emissionData.tournaments.some(t => t.id === currentTournamentId)
+        ? currentTournamentId
+        : emissionData.tournaments[0].id;
+      setSelectedTournamentId(defaultTournamentId);
     }
-  }, [emissionData, selectedTournamentId]);
-
+  }, [emissionData, selectedTournamentId, currentTournamentId]);
 
   if (!emissionData) {
     return <div className="bg-white min-h-screen">Chargement ou aucune donnée disponible...</div>;
@@ -155,8 +164,9 @@ const EventComponent: React.FC<EventComponentProps> = ({
             <ParticipantsSection
               emissionData={{
                 ...emissionData,
-                tournaments: [selectedTournament] // Passer uniquement le tournoi sélectionné
+                tournaments: [selectedTournament]
               }}
+              currentParticipantId={currentParticipantId}
             />
           </>
         ) : (
