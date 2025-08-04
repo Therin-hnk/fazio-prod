@@ -519,7 +519,7 @@ export default function StatsPage() {
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">Statistiques des actualités et vidéos</h2>
           <div className="bg-white p-6 rounded-xl shadow-lg hover-lift">
             <p className="text-gray-700 mb-2">Total Actualités: <span className="font-bold">{stats.newsAndVideos.totalNews}</span></p>
-            <p className="text-gray-700 mb-2">Total Vidéos d'événements: <span className="font-bold">{stats.newsAndVideos.totalEventVideos}</span></p>
+            <p className="text-gray-700 mb-2">{"Total Vidéos d'événements"}: <span className="font-bold">{stats.newsAndVideos.totalEventVideos}</span></p>
             <p className="text-gray-700 mb-4">Total Vidéos de participants: <span className="font-bold">{stats.newsAndVideos.totalParticipantVideos}</span></p>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">

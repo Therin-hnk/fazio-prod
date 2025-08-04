@@ -33,7 +33,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(eventUrl)}&via=${encodeURIComponent('votreCompteTwitter')}`;
         break;
       case 'whatsapp':
-        shareUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${eventUrl} ${shareImage}`)}`;
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${eventUrl}`)}`;
         break;
       case 'instagram':
         // Instagram ne supporte pas le partage direct par URL, on copie le lien
@@ -51,7 +51,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(`${eventUrl} ${shareImage}`);
+      await navigator.clipboard.writeText(`${eventUrl}`);
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
       setShowShareMenu(false);
