@@ -121,7 +121,7 @@ const EventComponent: React.FC<EventComponentProps> = ({
             {emissionData.name}
           </h1>
           <p className="text-base sm:text-lg opacity-90">
-            {emissionData.description || 'Aucune description disponible'}
+            {emissionData.description || ''}
           </p>
           {currentPhase && targetDate && (
             <div>
