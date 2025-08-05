@@ -8,7 +8,6 @@ const SearchBar: React.FC = () => {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      console.log('Recherche pour:', searchQuery);
       // TODO: prisma.emission.findMany({ where: { nom: { contains: searchQuery } } })
     }
   };

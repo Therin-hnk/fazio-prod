@@ -46,7 +46,6 @@ export default function PhasesPage() {
           throw new Error(errorData.message || 'Erreur lors de la récupération des phases.');
         }
         const phaseData = await phaseRes.json();
-        console.log(phaseData);
         setPhases(phaseData);
         setFilteredPhases(phaseData);
 

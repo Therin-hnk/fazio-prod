@@ -108,15 +108,11 @@ export default function ParticipantsPage() {
         ? { ...data, id: editingParticipant.id }
         : data;
 
-      console.log('Submitting data:', body);
-
       const response = await fetch(url, {
         method,
         headers: getHeaders(),
         body: JSON.stringify(body),
       });
-
-      // console.log('Response:', response);
 
       if (!response.ok) throw new Error('Erreur lors de la soumission');
       setIsFormOpen(false);

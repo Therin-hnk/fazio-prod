@@ -76,7 +76,6 @@ export default function ContactPage() {
         socialLinks={socialLinksData}
         onSubmit={async (data) => {
           // Votre logique d'envoi
-          console.log("Formulaire soumis:", data);
           try {
             const response = await fetch("/api/public/send-email", {
               // Assurez-vous que le chemin de l'API est correct
@@ -89,7 +88,6 @@ export default function ContactPage() {
 
             if (response.ok) {
               const result = await response.json();
-              console.log("E-mail envoyé avec succès !", result);
               alert("Votre message a été envoyé avec succès !"); // Retour utilisateur
               // Vous pourriez vouloir réinitialiser le formulaire ici
             } else {

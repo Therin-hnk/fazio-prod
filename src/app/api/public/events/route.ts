@@ -17,8 +17,6 @@ export async function GET(request: Request) {
       cache: "no-store"
     });
 
-    // console.log(response.status, response.statusText);
-
     const responseData = await response.json();
     
     if (!response.ok) {

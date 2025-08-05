@@ -7,6 +7,7 @@ import EventFilter from './components/EventFilter';
 import EventForm from './components/EventForm';
 import DeleteEventModal from './components/DeleteEventModal';
 import EventDetailsModal from './components/EventDetailsModal';
+import RankingsComponent from './components/RankingsComponent';
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -42,7 +43,6 @@ export default function EventsPage() {
           throw new Error(errorData.message || 'Erreur lors de la récupération des événements.');
         }
         const data = await res.json();
-        console.log(data);
         setEvents(data);
         setFilteredEvents(data);
       } catch (err) {
@@ -388,6 +388,8 @@ export default function EventsPage() {
           onAddParticipantToPhase={handleAddParticipantToPhase}
         />
       )}
+
+      <RankingsComponent/>
 
       <style jsx global>{`
         @keyframes fade-in {

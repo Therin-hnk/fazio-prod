@@ -21,10 +21,7 @@ export async function GET(
       },
     });
 
-    // console.log(response.status, response.statusText);
-
     const responseData = await response.json();
-    // console.log(responseData);
     
     if (!response.ok) {
       return Response.json(

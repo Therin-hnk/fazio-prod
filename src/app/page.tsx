@@ -47,8 +47,6 @@ const HomePage: React.FC = () => {
           alt: `${rawSlide.name} - Événement en vedette`,
         }));
 
-        console.log('Slides formatées:', formattedSlides); // Debugging line
-
         setSlides(formattedSlides);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Une erreur est survenue');

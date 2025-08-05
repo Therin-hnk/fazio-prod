@@ -20,8 +20,6 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
   const [showLearnMoreOverlay, setShowLearnMoreOverlay] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  console.log("emission data fetched", emissionData);
-
   // Fonction pour gérer le vote
   const getHeaders = (): Record<string, string> => {
     const headers: Record<string, string> = {
@@ -33,13 +31,6 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
   const handleVote = async (participantId: string, voteCount: number, price: number, tournamentId: string | undefined, phaseId: string | undefined) => {
     setIsLoading(true);
     try {
-      console.log('Vote details:', {
-        participantId,
-        voteCount,
-        price,
-        tournamentId,
-        phaseId,
-      });
       const response = await fetch("/api/public/payments/create", {
         method: "POST",
         headers: getHeaders(),
@@ -53,7 +44,6 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
       });
 
       const data = await response.json();
-      console.log(data);
 
       const currentUrl = window.location.href;
       const createTransactionResponse = await fetch(
@@ -87,7 +77,6 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
         throw new Error(`Erreur lors de la création de la collecte : ${transactionData.message || 'Erreur inconnue'}`);
       }
 
-      console.log('Transaction créée :', transactionData);
       const paymentUrl = transactionData["v1/transaction"]["payment_url"];
       window.location.href = paymentUrl;
     } finally {

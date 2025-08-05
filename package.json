@@ -14,8 +14,11 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "fedapay": "^1.2.4",
+    "file-saver": "^2.0.5",
     "framer-motion": "^12.23.3",
     "js-cookie": "^3.0.5",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "kkiapay-react": "^0.0.2",
     "lucide-react": "^0.525.0",
     "next": "14.2.0",
@@ -28,6 +31,7 @@
     "swiper": "^11.2.10"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",

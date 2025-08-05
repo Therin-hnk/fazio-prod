@@ -61,7 +61,6 @@ export default function EmissionPage() {
   if (loading) return <div className='bg-white'>Chargement...</div>;
   if (error) return <div className='bg-white'>Erreur : {error}</div>;
   if (!emissionData) return <div className='bg-white'>Aucune donnée disponible</div>;
-  console.log('Emission data:', emissionData);
 
   return (
     <div className='bg-white'>

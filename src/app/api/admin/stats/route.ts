@@ -20,11 +20,6 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Token non fourni" }, { status: 401 });
     }
 
-    console.log("Récupération des utilisateurs pour l'ID:", userId);
-    console.log("Token utilisé:", token);
-    console.log("API_URL:", API_URL);
-    console.log("APP_API_KEY:", APP_API_KEY);
-
     const response = await fetch(`${API_URL}/admin/${userId}/stats`, {
       method: "GET",
       headers: {
@@ -33,8 +28,6 @@ export async function GET(request: Request) {
         "X-Auth-Token": token,
       },
     });
-
-    // console.log(response.status, response.statusText);
 
     const responseData = await response.json();
 

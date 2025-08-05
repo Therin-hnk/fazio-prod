@@ -20,10 +20,7 @@ export async function GET(
       cache: "no-store"
     });
 
-    // console.log(response.status, response.statusText);
-
     const responseData = await response.json();
-    // console.log(responseData);
     
     if (!response.ok) {
       return Response.json(

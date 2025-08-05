@@ -9,7 +9,6 @@ const{ API_URL, APP_API_KEY } = getUrlParams();
 
 export async function POST(request: Request) {
   const body = await request.json();
-//   console.log(body);
 
   try {
     const userId = request.headers.get("x-user-id");
@@ -33,7 +32,6 @@ export async function POST(request: Request) {
     });
 
     const responseData = await response.json();
-    // console.log(responseData);
 
     if (!response.ok) {
       return Response.json(

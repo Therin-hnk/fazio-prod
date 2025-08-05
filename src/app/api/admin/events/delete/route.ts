@@ -19,8 +19,6 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "Token non fourni" }, { status: 401 });
   }
 
-  console.log(body);
-
   if (!body.ids || !Array.isArray(body.ids) || body.ids.length === 0) {
     return NextResponse.json({ error: "Tableau d'IDs non fourni ou vide" }, { status: 400 });
   }

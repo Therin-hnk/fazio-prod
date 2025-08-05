@@ -20,11 +20,6 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Token non fourni" }, { status: 401 });
     }
 
-    // console.log("Récupération pour l'ID:", userId);
-    // console.log("Token utilisé:", token);
-    // console.log("API_URL:", API_URL);
-    // console.log("APP_API_KEY:", APP_API_KEY);
-
     const response = await fetch(`${API_URL}/admin/${userId}/participants`, {
       method: "GET",
       headers: {
@@ -34,10 +29,7 @@ export async function GET(request: Request) {
       },
     });
 
-    // console.log(response.status, response.statusText);
-
     const responseData = await response.json();
-    console.log(responseData);
 
     if (!response.ok) {
       return Response.json(

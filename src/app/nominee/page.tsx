@@ -97,7 +97,6 @@ export default function NominateConnexion() {
     
     // Simulation d'un appel API
     setTimeout(() => {
-      console.log('Code secret envoyé:', password); // Changed matricule to password
       setIsLoading(false);
       // Here you would add your login logic
       // For a real application, you would make a fetch call here
@@ -110,7 +109,7 @@ export default function NominateConnexion() {
       //   });
       //   const data = await response.json();
       //   if (response.ok) {
-      //     console.log('Login successful:', data);
+      // 
       //     // Redirect or update UI
       //   } else {
       //     console.error('Login failed:', data.message);

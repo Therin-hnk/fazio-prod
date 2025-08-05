@@ -130,7 +130,6 @@ const ContactAdressSection: React.FC<ContactSectionProps> = ({
       if (onSubmit) {
         await onSubmit(formData);
       } else {
-        console.log('Données du formulaire:', formData);
         alert('Message envoyé avec succès !');
       }
       

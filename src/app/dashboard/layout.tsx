@@ -11,6 +11,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Topbar from "./components/Topbar";
 import Sidebar from "./components/Sidebar";
+import { ReactNode, useMemo } from "react"
+import { usePathname } from "next/navigation"
+
+// Liste des URLs où le header/footer doivent disparaître
+const HIDDEN_LAYOUT_PATHS = [
+  '/dashboard/login',
+]
 
 export default function AuthenticatedLayout({
   children,
@@ -20,6 +27,13 @@ export default function AuthenticatedLayout({
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  const pathname = usePathname()
+
+  // Détermine dynamiquement si le layout doit être caché
+  const isHiddenLayout = useMemo(() => (
+    HIDDEN_LAYOUT_PATHS.some(path => pathname?.startsWith(path))
+  ), [pathname])
 
   useEffect(() => {
     const checkIfSmallScreen = () => {
@@ -42,20 +56,23 @@ export default function AuthenticatedLayout({
 
       <div className="flex flex-1 pt-16 overflow-hidden">
         {/* Sidebar */}
-        <div
-          className={`
-          ${isSmallScreen ? "fixed inset-0 z-20" : "fixed"} 
-          ${
-            sidebarOpen || !isSmallScreen
-              ? "translate-x-0"
-              : "-translate-x-full"
-          } 
-          w-56 bg-white h-[calc(100vh-4rem)] transition-transform duration-300 ease-in-out
-          lg:translate-x-0
-        `}
-        >
-          <Sidebar onClose={() => setSidebarOpen(false)} />
-        </div>
+        {
+          !isHiddenLayout &&
+            <div
+              className={`
+              ${isSmallScreen ? "fixed inset-0 z-20" : "fixed"} 
+              ${
+                sidebarOpen || !isSmallScreen
+                  ? "translate-x-0"
+                  : "-translate-x-full"
+              } 
+              w-56 bg-white h-[calc(100vh-4rem)] transition-transform duration-300 ease-in-out
+              lg:translate-x-0
+            `}
+            >
+              <Sidebar onClose={() => setSidebarOpen(false)} />
+            </div>
+        }
 
         {/* Overlay pour mobile/tablette */}
         {isSmallScreen && sidebarOpen && (
