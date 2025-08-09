@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
+import WebsiteStatsSection from '../components/WebsiteStatsSection';
 
 // Interfaces TypeScript (inchangées, pour référence)
 interface SponsorStats {
@@ -217,6 +218,8 @@ export default function StatsPage() {
         <h1 className="text-4xl font-bold text-gray-900 mb-12 text-center animate-slide-up">
           Statistiques de la plateforme
         </h1>
+
+        <WebsiteStatsSection />
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
