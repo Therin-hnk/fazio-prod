@@ -18,7 +18,7 @@ const MenuBare = () => {
     { icon: Search, label: 'Événements', href: '/#events' },
     { icon: Trophy, label: 'Espace Nominé', href: '/nominee' },
     // { icon: Users, label: 'À propos', href: '/about' },
-    // { icon: Phone, label: 'Contact', href: '/contact' },
+    { icon: Phone, label: 'Contact', href: '/contact' },
   ];
 
   return (

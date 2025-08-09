@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { MapPin, Navigation, ExternalLink } from 'lucide-react';
 
 interface MapIframeProps {
   src: string;
@@ -6,76 +7,128 @@ interface MapIframeProps {
   width?: string;
   height?: string;
   className?: string;
+  address?: string;
 }
 
 const MapIframe: React.FC<MapIframeProps> = ({
   src,
-  title = "Localisation",
+  title = "Notre localisation",
   width = "100%",
   height = "400px",
-  className = ""
+  className = "",
+  address = "Adresse non spécifiée"
 }) => {
-  return (
-    <div 
-      className={`relative overflow-hidden rounded-lg shadow-lg ${className}`}
-      style={{ width, height }}
-    >
-      {/* Overlay avec design stylisé */}
-      <div className="absolute inset-0 bg-gray-200 z-0">
-        {/* Routes simulées en arrière-plan */}
-        <div className="absolute top-8 left-4 w-16 h-0.5 bg-white/70 transform rotate-45"></div>
-        <div className="absolute top-12 right-8 w-12 h-0.5 bg-white/70 transform -rotate-12"></div>
-        <div className="absolute bottom-16 left-8 w-20 h-0.5 bg-white/70 transform rotate-12"></div>
-        <div className="absolute bottom-8 right-4 w-14 h-0.5 bg-white/70 transform -rotate-45"></div>
-        
-        {/* Routes verticales */}
-        <div className="absolute top-4 left-12 w-0.5 h-16 bg-white/70"></div>
-        <div className="absolute top-20 right-12 w-0.5 h-12 bg-white/70"></div>
-        <div className="absolute bottom-4 left-20 w-0.5 h-20 bg-white/70"></div>
-        
-        {/* Numéros de routes */}
-        <div className="absolute top-6 right-16 w-6 h-6 bg-white rounded-full flex items-center justify-center">
-          <span className="text-xs font-medium text-gray-700">55</span>
-        </div>
-        <div className="absolute bottom-12 left-16 w-6 h-6 bg-white rounded-full flex items-center justify-center">
-          <span className="text-xs font-medium text-gray-700">130</span>
-        </div>
-      </div>
+  const [isLoaded, setIsLoaded] = useState(false);
 
-      {/* Zone principale avec iframe */}
-      <div className="absolute inset-4 bg-blue-700 rounded-md shadow-lg overflow-hidden">
-        {/* En-tête avec titre */}
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-          <div className="bg-white px-4 py-2 rounded shadow-md">
-            <h3 className="text-sm font-semibold text-gray-900 tracking-wide">
-              {title}
-            </h3>
+  const handleOpenInMaps = () => {
+    window.open(src, '_blank');
+  };
+
+  return (
+    <div className={`relative ${className}`}>
+      {/* Container principal avec formes décoratives */}
+      <div 
+        className="relative overflow-hidden rounded-3xl shadow-2xl bg-white border border-gray-100"
+        style={{ width, height }}
+      >
+        {/* Formes décoratives en arrière-plan */}
+        <div className="absolute top-0 left-0 w-32 h-32 bg-orange-100 rounded-full opacity-30 -translate-x-16 -translate-y-16"></div>
+        <div className="absolute bottom-0 right-0 w-24 h-24 bg-orange-200 rounded-full opacity-40 translate-x-12 translate-y-12"></div>
+        <div className="absolute top-1/3 right-8 w-16 h-16 bg-orange-50 rounded-full opacity-60"></div>
+
+        {/* En-tête élégant */}
+        <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-white/95 to-orange-50/95 backdrop-blur-sm border-b border-orange-100/50">
+          <div className="flex items-center justify-between p-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <MapPin className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">
+                  {title}
+                </h3>
+                <p className="text-sm text-gray-600 truncate max-w-64">
+                  {address}
+                </p>
+              </div>
+            </div>
+            
+            {/* Bouton d'ouverture externe */}
+            <button
+              onClick={handleOpenInMaps}
+              className="group flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-sm font-medium transition-all duration-300 hover:shadow-lg active:scale-95"
+            >
+              <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+              Ouvrir
+            </button>
           </div>
         </div>
 
-        {/* Iframe Google Maps */}
-        <iframe
-          src={src}
-          width="100%"
-          height="100%"
-          style={{ border: 0, marginTop: '60px' }}
-          allowFullScreen={true}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          title={title}
-          className="rounded-sm"
-        ></iframe>
-      </div>
+        {/* Zone de la carte */}
+        <div className="absolute inset-0 mt-20">
+          {/* Loader pendant le chargement */}
+          {!isLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-orange-50 to-orange-100 z-20">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse">
+                  <Navigation className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-gray-600 font-medium">Chargement de la carte...</p>
+                <div className="flex justify-center mt-3">
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
-      {/* Indicateur Google Maps */}
-      <div className="absolute top-2 right-2 bg-white/90 rounded-full p-1 shadow-md z-20">
-        <svg 
-          className="w-4 h-4 text-blue-600" 
-          fill="currentColor" 
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-        </svg>
+          {/* Iframe Google Maps */}
+          <iframe
+            src={src}
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen={true}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title={title}
+            className="rounded-b-3xl"
+            onLoad={() => setIsLoaded(true)}
+          />
+        </div>
+
+        {/* Indicateurs décoratifs */}
+        <div className="absolute bottom-6 left-6 flex gap-3 z-30">
+          {/* Badge interactif */}
+          <div className="bg-white/90 backdrop-blur-sm px-3 py-2 rounded-xl shadow-lg border border-orange-100/50 flex items-center gap-2 group hover:bg-white transition-all duration-300">
+            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-gray-700 group-hover:text-orange-600 transition-colors duration-300">
+              En direct
+            </span>
+          </div>
+        </div>
+
+        {/* Lignes décoratives subtiles */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
+          {/* Routes stylisées */}
+          <div className="absolute top-1/4 left-8 w-20 h-px bg-gradient-to-r from-transparent via-orange-300/30 to-transparent transform rotate-12"></div>
+          <div className="absolute top-1/2 right-12 w-16 h-px bg-gradient-to-r from-transparent via-orange-300/30 to-transparent transform -rotate-45"></div>
+          <div className="absolute bottom-1/3 left-1/4 w-24 h-px bg-gradient-to-r from-transparent via-orange-300/30 to-transparent transform rotate-6"></div>
+          
+          {/* Points d'intérêt simulés */}
+          <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-orange-400 rounded-full opacity-60 animate-pulse"></div>
+          <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-orange-500 rounded-full opacity-50"></div>
+        </div>
+
+        {/* Badge Google Maps moderne */}
+        <div className="absolute top-6 right-6 z-30">
+          <div className="bg-white/95 backdrop-blur-sm p-3 rounded-2xl shadow-lg border border-orange-100/50 group hover:scale-105 transition-transform duration-300">
+            <MapPin className="w-5 h-5 text-orange-500 group-hover:text-orange-600 transition-colors duration-300" />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -31,11 +31,11 @@ export default function ContactPage() {
   ];
 
   const faqData = [
-    {
-      question: "Comment puis-je créer un événement sur Fazio Prod ?",
-      response:
-        "Pour créer un événement, vous devez d'abord vous inscrire en tant que promoteur. Une fois connecté à votre espace promoteur, cliquez sur 'Créer un événement' et suivez les étapes pour configurer votre émission et les tournois associés.",
-    },
+    // {
+    //   question: "Comment puis-je créer un événement sur Fazio Prod ?",
+    //   response:
+    //     "Pour créer un événement, vous devez d'abord vous inscrire en tant que promoteur. Une fois connecté à votre espace promoteur, cliquez sur 'Créer un événement' et suivez les étapes pour configurer votre émission et les tournois associés.",
+    // },
     {
       question: "Comment fonctionne le système de vote ?",
       response:
@@ -67,45 +67,13 @@ export default function ContactPage() {
   ];
 
   const fazioPropMapUrl =
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63424.61738239187!2d2.3912!3d6.3703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1023e1db88c8c71d%3A0x6c0c1c0c1c0c1c0c!2sCotonou%2C%20B%C3%A9nin!5e0!3m2!1sfr!2sfr!4v1620000000000!5m2!1sfr!2sfr";
+    "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3376.6889378846695!2d2.3698829999999997!3d6.3570020000000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNsKwMjEnMjUuMiJOIDLCsDIyJzExLjYiRQ!5e1!3m2!1sfr!2sbj!4v1754757681858!5m2!1sfr!2sbj";
   return (
     <main className="bg-white min-h-screen">
       <ContactHeaderSection />
       <ContactAdressSection
         contactInfo={contactData}
         socialLinks={socialLinksData}
-        onSubmit={async (data) => {
-          // Votre logique d'envoi
-          try {
-            const response = await fetch("/api/public/send-email", {
-              // Assurez-vous que le chemin de l'API est correct
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-              const result = await response.json();
-              alert("Votre message a été envoyé avec succès !"); // Retour utilisateur
-              // Vous pourriez vouloir réinitialiser le formulaire ici
-            } else {
-              const errorData = await response.json();
-              console.error("Échec de l'envoi de l'e-mail :", errorData);
-              alert("Échec de l'envoi du message. Veuillez réessayer."); // Retour utilisateur
-            }
-          } catch (error) {
-            console.error(
-              "Une erreur est survenue lors de l'envoi de l'e-mail :",
-              error
-            );
-            alert(
-              "Une erreur est survenue. Veuillez vérifier votre connexion."
-            ); // Retour utilisateur
-          }
-        }}
-        //privacyPolicyLink="/confidentialite"
       />
       <section className="bg-[D1D5DB] p-6 rounded-lg shadow-sm w-full">
         <MapIframe

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, SVGProps } from 'react';
-import { Facebook, Instagram, Linkedin, Send, Youtube } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Send, Youtube, Mail } from 'lucide-react';
 
 // Interface pour une information de contact
 interface ContactInfoItem {
@@ -16,21 +16,12 @@ interface SocialLink {
   link: string;
 }
 
-// Interface pour les données du formulaire
-interface ContactFormData {
-  fullName: string;
-  email: string;
-  subject: string;
-  message: string;
-  //acceptPolicy: boolean;
-}
-
 // Interface pour les props du composant principal
 interface ContactSectionProps {
   contactInfo: ContactInfoItem[];
   socialLinks: SocialLink[];
-  onSubmit?: (data: ContactFormData) => void | Promise<void>;
   privacyPolicyLink?: string;
+  contactEmail?: string;
 }
 
 // Composant pour le logo X de Twitter
@@ -69,15 +60,15 @@ const getSocialIcon = (network: SocialLink['network']) => {
 // Composant pour une information de contact individuelle
 const ContactItem: React.FC<ContactInfoItem> = ({ logo, title, content }) => {
   return (
-    <div className="flex items-start gap-4 mb-6">
-      <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+    <div className="group flex items-start gap-4 mb-6 p-4 rounded-xl transition-all duration-300 hover:bg-orange-50/50 hover:shadow-sm">
+      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform duration-300">
         {logo}
       </div>
       <div className="flex-1">
-        <h3 className="text-base font-semibold text-gray-900 mb-1">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-orange-700 transition-colors duration-300">
           {title}
         </h3>
-        <div className="text-sm text-gray-600 whitespace-pre-line leading-relaxed">
+        <div className="text-base text-gray-600 whitespace-pre-line leading-relaxed">
           {content}
         </div>
       </div>
@@ -89,231 +80,109 @@ const ContactItem: React.FC<ContactInfoItem> = ({ logo, title, content }) => {
 const ContactAdressSection: React.FC<ContactSectionProps> = ({
   contactInfo,
   socialLinks,
-  onSubmit,
+  contactEmail = "fazioprod.inter@gmail.com",
 }) => {
-  // État du formulaire
-  const [formData, setFormData] = useState<ContactFormData>({
-    fullName: '',
-    email: '',
-    subject: '',
-    message: '',
-    //acceptPolicy: false
-  });
-
-  // État de soumission
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Gestion des changements dans les inputs
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type } = e.target;
-    
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
-    }));
-  };
-
-  // Gestion de la soumission du formulaire
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // if (!formData.acceptPolicy) {
-    //   alert('Veuillez accepter la politique de confidentialité');
-    //   return;
-    // }
-
-    setIsSubmitting(true);
-    
-    try {
-      if (onSubmit) {
-        await onSubmit(formData);
-      } else {
-        alert('Message envoyé avec succès !');
-      }
-      
-      setFormData({
-        fullName: '',
-        email: '',
-        subject: '',
-        message: '',
-        //acceptPolicy: false
-      });
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi:', error);
-      alert('Erreur lors de l\'envoi du message');
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleContactClick = () => {
+    const subject = encodeURIComponent("Demande d'information");
+    const body = encodeURIComponent("Bonjour,\n\nJ'aimerais obtenir plus d'informations concernant...\n\nMerci pour votre attention.\n\nCordialement,");
+    window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
   };
 
   return (
-    <div  id='contact-info' className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-2 md:p-10 md:gap-10 bg-white">
-      {/* Section Informations de contact */}
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-        <h2 className="text-xl font-bold text-blue-600 mb-6">
-          Informations de contact
-        </h2>
-        
-        <div className="mb-8">
-          {contactInfo.map((info, index) => (
-            <ContactItem
-              key={index}
-              logo={info.logo}
-              title={info.title}
-              content={info.content}
-            />
-          ))}
-        </div>
-        
-        {socialLinks.length > 0 && (
-          <div>
-            <h3 className="text-base font-semibold text-gray-900 mb-4">
-              Suivez-nous
-            </h3>
-            <div className="flex gap-3">
-              {socialLinks.map((social, index) => (
-                <a
+    <div className="relative bg-white overflow-hidden">
+      {/* Formes décoratives */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-orange-50 rounded-full opacity-60 translate-x-32 -translate-y-32"></div>
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-orange-100 rounded-full opacity-40 -translate-x-24 translate-y-24"></div>
+      
+      <div id='contact-info' className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-12 md:gap-12 max-w-7xl mx-auto">
+        {/* Section Informations de contact */}
+        <div className="relative bg-white p-8 rounded-3xl shadow-lg border border-gray-100/50 backdrop-blur-sm">
+          {/* Badge décoratif */}
+          <div className="absolute -top-4 left-8">
+            <div className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-full text-sm font-medium shadow-lg">
+              <div className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></div>
+              Contact Direct
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent mb-8">
+              Informations de contact
+            </h2>
+            
+            <div className="mb-10">
+              {contactInfo.map((info, index) => (
+                <ContactItem
                   key={index}
-                  href={social.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center transition-colors duration-200"
-                  aria-label={`Suivez-nous sur ${social.network}`}
-                >
-                  {getSocialIcon(social.network)}
-                </a>
+                  logo={info.logo}
+                  title={info.title}
+                  content={info.content}
+                />
               ))}
             </div>
-          </div>
-        )}
-      </div>
 
-      {/* Section Formulaire de contact */}
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-        <h2 className="text-xl font-bold text-blue-600 mb-6">
-          Envoyez-nous un message
-        </h2>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Première ligne : Nom et Email */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-                Nom complet <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleInputChange}
-                placeholder="Votre nom"
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="votre-email@example.com"
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-              />
-            </div>
-          </div>
-
-          {/* Sujet */}
-          <div>
-            <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-              Sujet <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="subject"
-              name="subject"
-              value={formData.subject}
-              onChange={handleInputChange}
-              placeholder="Sujet de votre message"
-              required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-            />
-          </div>
-
-          {/* Message */}
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-              Message <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              placeholder="Votre message..."
-              required
-              rows={6}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-vertical"
-            />
-          </div>
-
-          {/* Checkbox politique de confidentialité
-          <div className="flex items-start gap-3">
-            <input
-              type="checkbox"
-              id="acceptPolicy"
-              name="acceptPolicy"
-              checked={formData.acceptPolicy}
-              onChange={handleInputChange}
-              required
-              className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <label htmlFor="acceptPolicy" className="text-sm text-gray-600 leading-relaxed">
-              J&apos;accepte la{' '}
-              <a 
-                href={privacyPolicyLink} 
-                className="text-blue-600 hover:text-blue-800 underline"
-                target="_blank"
-                rel="noopener noreferrer"
+            {/* Bouton de contact email */}
+            <div className="mb-8">
+              <button
+                onClick={handleContactClick}
+                className="w-full group bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-3"
               >
-                politique de confidentialité
-              </a>
-            </label>
-          </div> */}
-
-          {/* Bouton d'envoi */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            //disabled={isSubmitting || !formData.acceptPolicy}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
-          >
-            {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Envoi en cours...
-              </>
-            ) : (
-              <>
-                Envoyer le message
-                <Send size={18} />
-              </>
+                <Mail className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                Nous contacter par email
+                <div className="w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300"></div>
+              </button>
+            </div>
+            
+            {socialLinks.length > 0 && (
+              <div className="border-t border-gray-100 pt-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-gradient-to-b from-orange-500 to-orange-600 rounded-full"></div>
+                  Suivez-nous
+                </h3>
+                <div className="flex gap-3 flex-wrap">
+                  {socialLinks.map((social, index) => (
+                    <a
+                      key={index}
+                      href={social.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 hover:from-orange-500 hover:to-orange-600 text-gray-600 hover:text-white rounded-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg group"
+                      aria-label={`Suivez-nous sur ${social.network}`}
+                    >
+                      <div className="group-hover:rotate-6 transition-transform duration-300">
+                        {getSocialIcon(social.network)}
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
             )}
-          </button>
-        </form>
+          </div>
+        </div>
+
+        {/* Section visuelle décorative */}
+        <div className="relative flex items-center justify-center">
+          <div className="relative w-full max-w-md">
+            {/* Cercles décoratifs animés */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-orange-100 to-orange-200 rounded-full opacity-30 animate-pulse"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-orange-200 to-orange-300 rounded-full opacity-40"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gradient-to-r from-orange-300 to-orange-400 rounded-full opacity-20"></div>
+            
+            {/* Icône centrale */}
+            <div className="relative z-10 w-32 h-32 bg-white rounded-3xl shadow-2xl flex items-center justify-center mx-auto transform rotate-12 hover:rotate-0 transition-transform duration-500">
+              <Mail className="w-16 h-16 text-orange-500" />
+            </div>
+
+            {/* Éléments flottants */}
+            <div className="absolute top-8 right-8 w-4 h-4 bg-orange-300 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }}></div>
+            <div className="absolute bottom-12 left-8 w-6 h-6 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute top-1/3 right-4 w-3 h-3 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '1.5s' }}></div>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default ContactAdressSection;
-export type { ContactInfoItem, SocialLink, ContactFormData, ContactSectionProps };
+export type { ContactInfoItem, SocialLink, ContactSectionProps };
