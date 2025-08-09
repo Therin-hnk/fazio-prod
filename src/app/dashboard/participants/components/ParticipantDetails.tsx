@@ -4,6 +4,8 @@ import { Participant } from '../../types/participant';
 import { X } from 'lucide-react';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
+import driveImageLoader from '@/app/lib/driveImageLoader';
+import Image from 'next/image';
 
 interface ParticipantDetailsProps {
   participant: Participant;
@@ -26,7 +28,7 @@ function ParticipantDetails({ participant, onClose }: ParticipantDetailsProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+      <div className="bg-white rounded-lg p-6 w-full h-[100vh] max-w-2xl overflow-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">
             Détails du participant : {participant.firstName} {participant.lastName}
@@ -72,9 +74,9 @@ function ParticipantDetails({ participant, onClose }: ParticipantDetailsProps) {
             <h3 className="text-sm font-medium text-gray-700">URL de l’avatar</h3>
             {participant.avatarUrl ? (
               <img
-                src={participant.avatarUrl}
-                alt={`Avatar de ${participant.firstName} ${participant.lastName}`}
-                className="h-16 w-16 object-cover rounded-full"
+                  src={driveImageLoader({ src: participant.avatarUrl })}
+                  alt="Image de l’émission"
+                  className="relative object-contain w-[100px] h-[100px]"
               />
             ) : (
               <p className="text-sm text-gray-900">N/A</p>

@@ -1,9 +1,12 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { JSX, SVGProps } from 'react';
 
-// Placeholder SVG Icons (replace with actual icon library like lucide-react if available in your environment)
+import Cookies from 'js-cookie';
+
+// Placeholder SVG Icons
 const Lock = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +55,6 @@ const ArrowRight = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) =>
   </svg>
 );
 
-// Eye icon for showing/hiding password
 const Eye = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +71,6 @@ const Eye = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-// EyeOff icon for showing/hiding password
 const EyeOff = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -86,66 +87,106 @@ const EyeOff = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-
 export default function NominateConnexion() {
-  const [password, setPassword] = useState(''); // Changed matricule to password
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // New state for password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  // Vérifier si l'utilisateur est connecté
+  useEffect(() => {
+    // Vérifier si on est côté client
+    if (typeof window === 'undefined') return;
+
+    if (Cookies.get('userId')) {
+      router.push('/nominee/dashboard');
+    }
+  }, [router]);
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    
-    // Simulation d'un appel API
-    setTimeout(() => {
+    setError('');
+
+    try {
+      const response = await fetch('/api/admin/auth/participants/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Stocker userId dans localStorage
+        Cookies.set('userId', data.userId);
+        router.push('/nominee/dashboard');
+      } else {
+        setError(data.message || 'Erreur de connexion. Veuillez réessayer.');
+      }
+    } catch (err) {
+      setError('Une erreur s\'est produite. Vérifiez votre connexion et réessayez.');
+    } finally {
       setIsLoading(false);
-      // Here you would add your login logic
-      // For a real application, you would make a fetch call here
-      // Example:
-      // try {
-      //   const response = await fetch('/api/login', {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify({ password }),
-      //   });
-      //   const data = await response.json();
-      //   if (response.ok) {
-      // 
-      //     // Redirect or update UI
-      //   } else {
-      //     console.error('Login failed:', data.message);
-      //     // Show error message to user
-      //   }
-      // } catch (error) {
-      //   console.error('Network error or unexpected issue:', error);
-      // } finally {
-      //   setIsLoading(false);
-      // }
-    }, 1500);
+    }
+  };
+
+  const handleLogout = () => {
+    Cookies.remove('userId');
+    router.refresh();
   };
 
   const handleGoHome = () => {
-    // Redirect to home page
-    window.location.href = '/';
+    router.push('/');
   };
 
   const handleGoToContact = () => {
-    // Redirect to contact page
-    window.location.href = '/contact#contact-info';
+    router.push('/contact#contact-info');
   };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  // Si l'utilisateur est connecté, afficher un message différent
+  if (Cookies.get('isAuthenticated')) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Vous êtes déjà connecté
+          </h1>
+          <p className="text-gray-600 mb-6">
+            {"Vous avez déjà accès à l'espace nominés."}
+          </p>
+          <div className="space-y-4">
+            <button
+              onClick={() => router.push('/nominee/dashboard')}
+              className="w-full bg-gray-700 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-2 transition-all duration-200"
+            >
+              Aller au tableau de bord
+            </button>
+            <button
+              onClick={handleLogout}
+              className="w-full bg-gray-200 text-gray-700 py-3 px-4 rounded-xl font-semibold text-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all duration-200"
+            >
+              Se déconnecter
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
       {/* Form Section - Left */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-200">
             {/* Form Header */}
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-orange-500 rounded-full mb-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-500 rounded-full mb-4">
                 <Lock className="w-8 h-8 text-white" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -158,6 +199,13 @@ export default function NominateConnexion() {
 
             {/* Form */}
             <div className="space-y-6">
+              {/* Error Message */}
+              {error && (
+                <div className="text-red-600 text-sm font-medium text-center">
+                  {error}
+                </div>
+              )}
+
               {/* Password Field */}
               <div className="space-y-2">
                 <label htmlFor="password" className="block text-sm font-semibold text-gray-700">
@@ -169,11 +217,11 @@ export default function NominateConnexion() {
                   </div>
                   <input
                     id="password"
-                    type={showPassword ? 'text' : 'password'} 
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Entrez votre code secret"
-                    className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                    className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-300 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
                     required
                   />
                   <button
@@ -195,7 +243,7 @@ export default function NominateConnexion() {
               <button
                 onClick={handleSubmit}
                 disabled={isLoading || !password.trim()}
-                className="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full bg-orange-600 text-white py-3 px-4 rounded-xl font-semibold text-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">
@@ -211,13 +259,9 @@ export default function NominateConnexion() {
             {/* Useful Links */}
             <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="text-center space-y-3">
-                {/* <button className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors">
-                  Code secret oublié ?
-                </button> */}
-               
-                <button 
+                <button
                   onClick={handleGoToContact}
-                  className="text-gray-500 text-sm hover:text-blue-700 transition-colors cursor-pointer"
+                  className="text-gray-500 text-sm hover:text-orange-600 transition-colors cursor-pointer"
                 >
                   Code secret oublié ? Contactez l&apos;organisateur
                 </button>
@@ -228,22 +272,22 @@ export default function NominateConnexion() {
       </div>
 
       {/* Logo and Navigation Section - Right */}
-      <div className="hidden lg:flex flex-1 flex-col items-center justify-center p-8 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 relative overflow-hidden">
+      <div className="hidden lg:flex flex-1 flex-col items-center justify-center p-8 bg-gray-800">
         <div className="text-center space-y-8 z-10">
           {/* Logo */}
           <div className="relative h-48 w-96 mx-auto">
-            <Image 
-              src="/logo/logo1.png" 
-              alt="FazioProd Logo" 
+            <Image
+              src="/logo/logo1.png"
+              alt="FazioProd Logo"
               fill
-              className="object-contain filter drop-shadow-2xl"
+              className="object-contain filter drop-shadow-xl"
               priority
               sizes="(max-width: 768px) 300px, 400px"
             />
           </div>
 
           {/* Welcome Text */}
-          <div className="text-white space-y-4">
+          <div className="text-orange-500 space-y-4">
             <h2 className="text-3xl font-bold">
               Bienvenue sur FazioProd
             </h2>
@@ -252,23 +296,18 @@ export default function NominateConnexion() {
           {/* Home Button */}
           <button
             onClick={handleGoHome}
-            className="inline-flex items-center px-8 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-lg border border-white/30 rounded-2xl text-white font-semibold text-lg transition-all duration-300 transform hover:scale-105 group"
+            className="inline-flex items-center px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl text-white font-semibold text-lg transition-all duration-200"
           >
-            <Home className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" />
+            <Home className="w-6 h-6 mr-3" />
             Retour à l&apos;accueil
-            <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-5 h-5 ml-3" />
           </button>
 
           {/* Additional Info */}
-          <div className="text-white/60 text-sm">
+          <div className="text-white/70 text-sm">
             Accès réservé aux nominés uniquement
           </div>
         </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute top-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-20 right-32 w-24 h-24 bg-orange-500/20 rounded-full blur-xl"></div>
-        <div className="absolute top-1/3 right-10 w-16 h-16 bg-blue-400/20 rounded-full blur-lg"></div>
       </div>
     </div>
   );
