@@ -141,7 +141,9 @@ const WebsiteStatsSection: React.FC = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const response = await fetch('/api/public/analytics');
+        const response = await fetch('/api/public/analytics', {
+          cache: "no-store"
+        });
         const result: AnalyticsData = await response.json();
         if (response.ok) {
           // Utiliser les données globales de totals et voteStats
