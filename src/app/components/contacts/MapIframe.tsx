@@ -65,7 +65,7 @@ const MapIframe: React.FC<MapIframeProps> = ({
         </div>
 
         {/* Zone de la carte */}
-        <div className="absolute inset-0 mt-20">
+        <div className="absolute inset-0 mt-[100px]">
           {/* Loader pendant le chargement */}
           {!isLoaded && (
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-orange-50 to-orange-100 z-20">
