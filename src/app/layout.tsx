@@ -120,8 +120,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html className="bg-white dark:bg-gray-900" lang="fr">
       <head>
-        <link href="https://fazio-prod.bj" rel="canonical" /> {/* Remplacez par votre URL */}
+        <link href="https://www.fazioprod.com" rel="canonical" />
         <link href="/logo.png" rel="icon" />
+        {/* Google Analytics 4 Script */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GER8R5Y5SH"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-GER8R5Y5SH');
+            `,
+          }}
+        />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col text-gray-900 dark:text-gray-100`}>
         {/* Titres masqués pour SEO */}
