@@ -38,7 +38,7 @@ interface AnalyticsData {
     currencyCode: string;
     dateRange: { startDate: string; endDate: string };
     rowCount: number;
-  };
+  }; 
 }
 
 // Hook pour l'animation du compteur
