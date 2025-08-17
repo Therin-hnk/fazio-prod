@@ -60,7 +60,7 @@ export default function Topbar({ onMenuToggle, isMobile }: TopbarProps) {
             <Image
               width={96}
               height={96}
-              src="/logo.png"
+              src="/logo/logo1.png"
               alt="Fazio-prod logo"
               className="ml-4 ps-5 w-[120px] py-1 object-contain"
             />
