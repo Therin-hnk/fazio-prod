@@ -34,7 +34,7 @@ export const metadata: Metadata = {
       "Rejoignez Fazio Prod pour voter, découvrir des talents et participer à des concours culturels au Bénin, de Porto-Novo à Ouidah.",
     images: [
       {
-        url: "https://www.fazioprod.com/og-image.jpg",
+        url: "https://www.fazioprod.com/logo.png",
         width: 800,
         height: 600,
         alt: "Fazio Prod - Concours et Événements au Bénin",
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: "/fazio-prod-logo.svg",
-    apple: "/apple-touch-icon.png",
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
 };
 
