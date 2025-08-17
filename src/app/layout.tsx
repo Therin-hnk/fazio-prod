@@ -6,7 +6,6 @@ import MenuBare from "./components/menu";
 import "./globals.css";
 
 import { ReactNode } from "react";
-import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 

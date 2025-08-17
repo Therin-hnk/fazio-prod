@@ -210,7 +210,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
               whileTap={{ scale: 0.98 }}
             >
               <Eye className="w-5 h-5" />
-              <span>{"Découvrir l'événement"}</span>
+              <span>{"Découvrir"}</span>
             </motion.a>
           </div>
         </div>
