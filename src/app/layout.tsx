@@ -112,6 +112,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <link rel="canonical" href="https://www.fazioprod.com" />
         <link rel="icon" href="/logo.png" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(schemaData),
+          }}
+        />
       </head>
       <body
         className={`${inter.className} min-h-screen flex flex-col text-gray-900 dark:text-gray-100`}
@@ -174,11 +180,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             gtag('js', new Date());
             gtag('config', 'G-GER8R5Y5SH');
           `}
-        </Script>
-
-        {/* Schema.org JSON-LD */}
-        <Script id="schema-org" type="application/ld+json" strategy="afterInteractive">
-          {JSON.stringify(schemaData)}
         </Script>
       </body>
     </html>
