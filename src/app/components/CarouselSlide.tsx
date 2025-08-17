@@ -157,7 +157,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
             <img
               src={currentSlideData.backgroundImage}
               alt={currentSlideData.alt}
-              className="w-full h-full object-cover object-left-top"
+              className="w-full h-full object-cover object-left-top block"
             />
           </motion.div>
 
