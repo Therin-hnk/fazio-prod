@@ -168,19 +168,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <p>© {new Date().getFullYear()} Fazio Prod. Tous droits réservés.</p>
         </footer>
 
-        {/* Google Analytics 4 */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-GER8R5Y5SH"
-          strategy="afterInteractive"
+        {/* Google Analytics 4 Script */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GER8R5Y5SH"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-GER8R5Y5SH');
+            `,
+          }}
         />
-        <Script id="ga-script" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-GER8R5Y5SH');
-          `}
-        </Script>
       </body>
     </html>
   );
