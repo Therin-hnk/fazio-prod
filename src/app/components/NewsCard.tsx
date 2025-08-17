@@ -15,10 +15,9 @@ export interface NewsItem {
 const NewsCard: React.FC<{ item: NewsItem }> = ({ item }) => (
   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden group">
     <div className="relative h-48 overflow-hidden">
-      <Image
+      <img
         src={item.image}
         alt={item.title}
-        fill
         className="object-cover transition-transform duration-300 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />

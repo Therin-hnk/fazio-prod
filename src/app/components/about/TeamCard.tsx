@@ -67,11 +67,9 @@ export const TeamMemberCard: React.FC<TeamMemberCardProps> = ({
     <div className="bg-white rounded-lg shadow-sm p-6 flex flex-col items-center text-center max-w-xs mx-auto">
       {/* Photo de profil */}
       <div className="w-20 h-20 mb-4 overflow-hidden rounded-full relative">
-        <Image 
+        <img 
           src={imageUrl} 
           alt={`Photo de ${name}`}
-          fill
-          unoptimized={true}
           className="object-cover"
         />
       </div>

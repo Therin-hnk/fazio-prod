@@ -124,13 +124,12 @@ function EventDetailsModal({ event, onClose, onAddPhase, onAddParticipantToPhase
                 >
                   <div className="w-[40px] h-[40px] rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                     {participant.avatarUrl ? (
-                      <Image
+                      <img
                         src={driveImageLoader({ src: participant.avatarUrl || '' })}
                         alt={`Avatar de ${getParticipantName(participant)}`}
                         className="object-cover w-[40px] h-[40px]"
                         width={20}
                         height={20}
-                        quality={75}
                         loading="lazy"
                       />
                     ) : (

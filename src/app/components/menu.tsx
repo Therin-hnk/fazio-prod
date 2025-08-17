@@ -1,13 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Home, Search, Calendar, User, Users, Phone, Menu, X, Crown, Trophy } from 'lucide-react';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+
+const HIDDEN_LAYOUT_PATHS = ["/dashboard"];
 
 const MenuBare = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname(); // Récupère l'URL actuelle
+
+  const isHiddenLayout = useMemo(
+    () => HIDDEN_LAYOUT_PATHS.some((path) => pathname?.startsWith(path)),
+    [pathname]
+  );
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -21,6 +27,12 @@ const MenuBare = () => {
     { icon: Phone, label: 'Contact', href: '/contact' },
   ];
 
+  if(
+    isHiddenLayout
+  ) {
+    return null; // Ne pas afficher le menu si on est sur une page cachée
+  }
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-lg border-b border-gray-200 font-poppins">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
@@ -28,11 +40,10 @@ const MenuBare = () => {
           {/* Logo */}
           <div className="flex items-center flex-shrink-0">
             <a href='/'>
-              <Image
+              <img
                   src="/logo/logo2.png"
                   width={20} height={20}
                   alt='' className='w-[70px] h-[70px] object-contain'
-                  unoptimized
               />
             </a>
           </div>

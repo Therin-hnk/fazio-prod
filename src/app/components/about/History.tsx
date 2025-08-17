@@ -9,12 +9,10 @@ export default function NotreHistoire() {
           <div className="relative">
             <div className="relative overflow-hidden rounded-2xl shadow-2xl">
               <div className="aspect-[4/3] relative">
-                <Image
+                <img
                   src="/images/concert-image.png"
                   alt="Concert avec public - FazioProd événements"
-                  fill
                   className="object-cover"
-                  priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>

@@ -276,12 +276,10 @@ export default function NominateConnexion() {
         <div className="text-center space-y-8 z-10">
           {/* Logo */}
           <div className="relative h-48 w-96 mx-auto">
-            <Image
+            <img
               src="/logo/logo1.png"
               alt="FazioProd Logo"
-              fill
               className="object-contain filter drop-shadow-xl"
-              priority
               sizes="(max-width: 768px) 300px, 400px"
             />
           </div>

@@ -149,19 +149,15 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
         >
           {/* Image de fond avec effet de zoom subtil */}
           <motion.div
-            className="absolute inset-0"
+            className="absolute inset-0 w-full h-full overflow-hidden"
             initial={{ scale: 1.1 }}
             animate={{ scale: 1.05 }}
             transition={{ duration: 8, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }}
           >
-            <Image
+            <img
               src={currentSlideData.backgroundImage}
               alt={currentSlideData.alt}
-              fill
-              className="object-cover object-left-top"
-              quality={90}
-              priority={currentSlide === 0}
-              loading={currentSlide === 0 ? undefined : 'lazy'}
+              className="w-full h-full object-cover object-left-top"
             />
           </motion.div>
 

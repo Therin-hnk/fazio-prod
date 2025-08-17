@@ -57,7 +57,7 @@ export default function Topbar({ onMenuToggle, isMobile }: TopbarProps) {
               </button>
             )}
             
-            <Image
+            <img
               width={96}
               height={96}
               src="/logo/logo1.png"

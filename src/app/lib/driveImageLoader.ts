@@ -3,6 +3,6 @@
 
 export default function driveImageLoader({ src }: { src: string }) {
     // Assuming 'src' is the Google Drive file ID
-    // return `https://drive.google.com/uc?id=${src}&export=download`;
-    return `/images/${src}`;
+    return `https://lh3.googleusercontent.com/d/${src}`;
+    // return `/images/${src}`;
 }

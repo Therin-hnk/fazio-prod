@@ -108,11 +108,10 @@ const EventComponent: React.FC<EventComponentProps> = ({
         className="relative w-full h-[500px] sm:h-[600px] lg:h-[700px] flex items-center justify-center text-white"
       >
         {emissionData.image && (
-          <Image
+          <img
             src={driveImageLoader({ src: emissionData.image })}
             alt="Image de l’émission"
-            fill
-            className="object-cover brightness-50 w-full h-full"
+            className="object-cover object-center-center brightness-50 w-full h-full absolute inset-0"
           />
         )}
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>

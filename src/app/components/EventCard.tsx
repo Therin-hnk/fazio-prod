@@ -76,13 +76,11 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
       >
         {/* Image Container - Optimisée pour affichage complet */}
         <div className="relative h-56 md:h-64 overflow-visible">
-          <Image
+          <img
             src={imageUrl}
             alt={event.name}
-            fill
             className="object-cover object-center transition-all duration-700 group-hover:scale-105 group-hover:brightness-110"
             style={{ objectFit: 'cover', objectPosition: 'center' }}
-            quality={90}
             loading="lazy"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
@@ -104,7 +102,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           <div className="absolute top-6 left-6 z-30">
             <motion.button
               onClick={() => setShowShareMenu(!showShareMenu)}
-              className="bg-white/20 backdrop-blur-lg text-white p-3 rounded-2xl shadow-xl border border-white/20 transition-all duration-300 hover:bg-white/30"
+              className="bg-black/55 backdrop-blur-lg text-white p-3 rounded-2xl shadow-xl border border-white/20 transition-all duration-300 hover:bg-orange-600"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

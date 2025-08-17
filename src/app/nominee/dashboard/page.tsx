@@ -288,10 +288,9 @@ export default function ParticipantDashboard() {
                 <div className="relative mx-auto mb-6">
                   {data.avatarUrl ? (
                     <div className="w-full h-[500px] rounded-3xl overflow-hidden bg-orange-500 p-1 shadow-2xl mx-auto">
-                        <Image
+                        <img
                             src={driveImageLoader({ src: data.avatarUrl })}
                             alt="Image de l’émission"
-                            fill
                             className="object-contain w-full h-full"
                         />
                     </div>

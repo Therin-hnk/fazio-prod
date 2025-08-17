@@ -395,7 +395,7 @@ function ParticipantForm({ participant, events, onSubmit, onClose }: Participant
                       } focus:ring-4 focus:outline-none bg-gray-50/50 focus:bg-white`}
                       placeholder="https://example.com/avatar.jpg"
                     />
-                    <Image className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
+                    <img className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-red-500 transition-colors" />
                   </div>
                   {validationErrors.avatarUrl && (
                     <p className="mt-2 text-sm text-red-600 flex items-center gap-1">

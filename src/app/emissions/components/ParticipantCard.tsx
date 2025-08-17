@@ -270,10 +270,9 @@ const ParticipantCard: React.FC<ParticipantCardProps> = ({
 
         {/* --- IMAGE + VOTES + PARTAGE --- */}
         <div className="relative h-60 overflow-hidden">
-          <Image
+          <img
             src={image}
             alt={name}
-            fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute top-3 right-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1 hover:scale-105 transition-transform">

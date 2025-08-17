@@ -55,11 +55,10 @@ const ParticipantDetailsOverlay: React.FC<ParticipantDetailsOverlayProps> = ({
         </button>
         <div className="flex flex-col gap-4">
           <div className="relative h-[100vh] rounded-lg overflow-hidden">
-            <Image
+            <img
               src={driveImageLoader({ src: participant.avatarUrl || "" })}
               alt={`${participant.firstName} ${participant.lastName}`}
               className="object-contain w-full h-full"
-              fill
             />
             {/* Conteneur pour le badge des votes et le bouton de vote */}
             <motion.div

@@ -20,13 +20,12 @@ const PartnerCard: React.FC<PartnerProps> = ({
   const content = logoComponent ? (
     logoComponent
   ) : logoUrl ? (
-    <Image
+    <img
       src={logoUrl}
       alt={alt || `Logo ${name}`}
       // Reduced image dimensions
       width={100} // Was 120
       height={50} // Was 60
-      unoptimized={true} 
       className="object-contain"
     />
   ) : (
