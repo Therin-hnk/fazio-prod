@@ -6,6 +6,7 @@ import MenuBare from "./components/menu";
 import "./globals.css";
 
 import { ReactNode } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -162,6 +163,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main className="flex-grow font-poppins" role="main">
           {children}
         </main>
+
+        <SpeedInsights />
 
         <footer className="bg-gray-800 text-gray-100 py-6 text-center">
           <p>© {new Date().getFullYear()} Fazio Prod. Tous droits réservés.</p>
