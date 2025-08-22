@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { FiX } from 'react-icons/fi';
-import { LayoutDashboard, LucideTicketPercent, TicketCheck, Ticket, LucideUsers, BookUserIcon, LucideShoppingCart, BookTemplateIcon, Tv2, Group, LucideUserPlus2 } from 'lucide-react';
+import { LayoutDashboard, Tv2, Group, LucideUserPlus2, UserRoundCog, Microchip } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
 import Cookies from 'js-cookie';
+import { MicrophoneIcon } from '@heroicons/react/24/outline';
 
 const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
 
   // Tableau de correspondance des rôles et menus
   const roleNavItems: Record<string, string[]> = {
-    ADMINISTRATOR: ['dashboard', 'emission', 'tournament', 'participant', 'phase'],
+    ADMINISTRATOR: ['dashboard', 'emission', 'tournament', 'participant', 'phase', 'organizations', "advertissements"],
   };
 
   // Liste complète des éléments de navigation
@@ -75,6 +75,30 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
       key: 'participant',
       icon: (isActive: boolean) => (
         <LucideUserPlus2
+          className={isActive ? 'text-[#1E3A8A]' : 'text-gray-600'}
+          size={20}
+          aria-hidden="true"
+        />
+      ),
+    },
+    {
+      label: 'Organisations',
+      href: '/dashboard/organizations',
+      key: 'organizations',
+      icon: (isActive: boolean) => (
+        <UserRoundCog
+          className={isActive ? 'text-[#1E3A8A]' : 'text-gray-600'}
+          size={20}
+          aria-hidden="true"
+        />
+      ),
+    },
+    {
+      label: 'Publicités',
+      href: '/dashboard/advertissements',
+      key: 'advertissements',
+      icon: (isActive: boolean) => (
+        <Microchip
           className={isActive ? 'text-[#1E3A8A]' : 'text-gray-600'}
           size={20}
           aria-hidden="true"
