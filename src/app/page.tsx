@@ -65,7 +65,7 @@ const HomePage: React.FC = () => {
         <meta name="description" content="Découvrez les meilleurs événements et talents de votre région" />
       </Head>
       <MenuBare />
-      {/* <PublicAdvertissements /> */}
+      <PublicAdvertissements />
       <section
         className="relative h-screen overflow-hidden"
         role="region"
