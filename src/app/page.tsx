@@ -8,6 +8,7 @@ import MenuBare from './components/menu';
 import EventsSection from './components/EventsSection';
 import WebsiteStatsSection from './components/WebsiteStatsSection';
 import driveImageLoader from './lib/driveImageLoader';
+import PublicAdvertissements from './components/PublicAdvertissements';
 
 interface Slide {
   id: string;
@@ -64,6 +65,7 @@ const HomePage: React.FC = () => {
         <meta name="description" content="Découvrez les meilleurs événements et talents de votre région" />
       </Head>
       <MenuBare />
+      <PublicAdvertissements />
       <section
         className="relative h-screen overflow-hidden"
         role="region"
