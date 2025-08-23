@@ -7,7 +7,7 @@ import { LayoutDashboard, Tv2, Group, LucideUserPlus2, UserRoundCog, Microchip }
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
 import Cookies from 'js-cookie';
-import { MicrophoneIcon } from '@heroicons/react/24/outline';
+import { GiRank2 } from 'react-icons/gi';
 
 const Sidebar = ({ onClose }: { onClose?: () => void }) => {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
 
   // Tableau de correspondance des rôles et menus
   const roleNavItems: Record<string, string[]> = {
-    ADMINISTRATOR: ['dashboard', 'emission', 'tournament', 'participant', 'phase', 'organizations', "advertissements"],
+    ADMINISTRATOR: ['dashboard', 'emission', 'tournament', 'participant', 'phase', 'organizations', "advertissements", "classement"],
   };
 
   // Liste complète des éléments de navigation
@@ -75,6 +75,18 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
       key: 'participant',
       icon: (isActive: boolean) => (
         <LucideUserPlus2
+          className={isActive ? 'text-[#1E3A8A]' : 'text-gray-600'}
+          size={20}
+          aria-hidden="true"
+        />
+      ),
+    },
+    {
+      label: 'Classements',
+      href: '/dashboard/classements',
+      key: 'classement',
+      icon: (isActive: boolean) => (
+        <GiRank2
           className={isActive ? 'text-[#1E3A8A]' : 'text-gray-600'}
           size={20}
           aria-hidden="true"
