@@ -279,7 +279,7 @@ export default function NominateConnexion() {
             <img
               src="/logo/logo1.png"
               alt="FazioProd Logo"
-              className="object-contain filter drop-shadow-xl"
+              className="object-contain filter drop-shadow-xl h-48 w-96"
               sizes="(max-width: 768px) 300px, 400px"
             />
           </div>
