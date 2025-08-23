@@ -379,7 +379,7 @@ const RankingsComponent: React.FC = () => {
               <Trophy className="w-8 h-8 text-slate-400" />
             </div>
             <h3 className="text-lg font-medium text-slate-900 mb-1">Aucun événement</h3>
-            <p className="text-slate-500">Aucun événement n'a été trouvé.</p>
+            <p className="text-slate-500">{"Aucun événement n'a été trouvé."}</p>
           </div>
         ) : (
           <div className="space-y-8">
