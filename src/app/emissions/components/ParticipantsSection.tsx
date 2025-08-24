@@ -156,6 +156,17 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
           phaseId={getActivePhaseId(emissionData.tournaments.find(t => t.phases.some(p => p.participants.some(p => p.id === selectedParticipant.id)))!)}
           onVote={handleVote}
           onClose={() => setShowLearnMoreOverlay(null)}
+          isAvailable={emissionData.tournaments.some(tournament =>
+            tournament.phases.some(phase =>
+              phase.participants.some(p => p.id === selectedParticipant.id) &&
+              (() => {
+                const now = new Date();
+                const start = phase.startDate ? new Date(phase.startDate) : null;
+                const end = phase.endDate ? new Date(phase.endDate) : null;
+                return start && end && now >= start && now <= end;
+              })()
+            )
+          )}
         />
       )}
 
@@ -182,20 +193,29 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({
               {tournament.phases.length > 0 && participants.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {participants.map(participant => (
-                    <ParticipantCard
-                      key={participant.id}
-                      id={participant.id}
-                      name={`${participant.firstName} ${participant.lastName}`}
-                      description={participant.description || ''}
-                      image={driveImageLoader({ src: participant.avatarUrl || "" })}
-                      votePrice={emissionData.votePrice || 0}
-                      totalVotes={participant.totalVotes || 0}
-                      phaseId={getActivePhaseId(tournament)}
-                      tournamentId={tournament.id}
-                      youtubeLinks={participant.videos?.map(video => video.url) || []}
-                      onVote={handleVote}
-                      onLearnMore={handleLearnMore}
-                    />
+                  <ParticipantCard
+                    key={participant.id}
+                    id={participant.id}
+                    name={`${participant.firstName} ${participant.lastName}`}
+                    description={participant.description || ''}
+                    image={driveImageLoader({ src: participant.avatarUrl || "" })}
+                    votePrice={emissionData.votePrice || 0}
+                    totalVotes={participant.totalVotes || 0}
+                    phaseId={getActivePhaseId(tournament)}
+                    tournamentId={tournament.id}
+                    youtubeLinks={participant.videos?.map(video => video.url) || []}
+                    onVote={handleVote}
+                    onLearnMore={handleLearnMore}
+                    isAvailable={
+                      tournament.phases.some((phase) => {
+                        const now = new Date();
+                        const start = phase.startDate ? new Date(phase.startDate) : null;
+                        const end = phase.endDate ? new Date(phase.endDate) : null;
+                        // Le participant est disponible si la phase est en cours ET qu'il est dans cette phase
+                        return start && end && now >= start && now <= end && phase.participants.some(p => p.id === participant.id);
+                      })
+                    }
+                  />
                   ))}
                 </div>
               ) : (
