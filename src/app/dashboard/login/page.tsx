@@ -53,13 +53,14 @@ const Login = () => {
         });
         setErrorMessage(res.message || 'Erreur lors de la connexion');
       } else {
-        const { userId, token } = res;
+        const { userId, token, roleName } = res;
 
         // Stocker le token dans un cookie sécurisé
         Cookies.set('managerToken', token, { secure: true, sameSite: 'Strict' });
 
         // Stocker le userId et le role dans le Local Storage
         localStorage.setItem('managerId', userId);
+        localStorage.setItem('userRole', roleName);
 
         // Redirection directe vers /manager
         window.location.href = '/dashboard';

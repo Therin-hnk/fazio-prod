@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { FiX } from 'react-icons/fi';
-import { LayoutDashboard, Tv2, Group, LucideUserPlus2, UserRoundCog, Microchip } from 'lucide-react';
+import { LayoutDashboard, Tv2, Group, LucideUserPlus2, UserRoundCog, Microchip, UserPenIcon } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
 import Cookies from 'js-cookie';
@@ -16,7 +16,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
 
   // Tableau de correspondance des rôles et menus
   const roleNavItems: Record<string, string[]> = {
-    ADMINISTRATOR: ['dashboard', 'emission', 'tournament', 'participant', 'phase', 'organizations', "advertissements", "classement"],
+    admin: ['dashboard', 'emission', 'tournament', 'participant', 'phase', 'organizations', "advertissements", "classement", "users"],
   };
 
   // Liste complète des éléments de navigation
@@ -117,13 +117,25 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
         />
       ),
     },
+    {
+      label: 'Gestion des utilisateurs',
+      href: '/dashboard/users',
+      key: 'users',
+      icon: (isActive: boolean) => (
+        <UserPenIcon
+          className={isActive ? 'text-[#1E3A8A]' : 'text-gray-600'}
+          size={20}
+          aria-hidden="true"
+        />
+      ),
+    },
   ];
 
   // Initialiser les éléments de navigation au montage
   useEffect(() => {
     // Fonction pour initialiser les éléments de navigation
     const initializeNavItems = () => {
-      const currentRole = "ADMINISTRATOR";
+      const currentRole = localStorage.getItem('userRole');
       const filteredNavItems = currentRole && roleNavItems[currentRole]
         ? navItems.filter((item) => roleNavItems[currentRole].includes(item.key))
         : [];
@@ -131,7 +143,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
       setAllowedNavItems(filteredNavItems);
     };
     initializeNavItems();
-  });
+  }, []);
 
   // Vérifier l'authentification
   useEffect(() => {
@@ -155,6 +167,7 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
       });
       document.cookie = 'managerToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       localStorage.removeItem('managerId');
+      localStorage.removeItem('userRole');
       window.location.href = '/dashboard/login';
     } catch (error) {
       Swal.fire({

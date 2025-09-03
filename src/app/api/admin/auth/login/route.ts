@@ -26,13 +26,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const { userId, token, roleName } = responseData;
+    const { userId, token, role } = responseData;
 
     return Response.json(
       {
         userId,
         token,
-        roleName,
+        roleName: role,
       },
       { status: 200 }
     );
